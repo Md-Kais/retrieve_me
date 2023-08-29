@@ -61,7 +61,7 @@ flutter run
 flutter run
 ```
 
-### 6. Testing
+### 5. Testing
 
 You can now interact with the "Retrieve Me" app on the emulator or device. Explore its features and functionalities to ensure everything is working as expected.
 
