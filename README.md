@@ -77,6 +77,14 @@ Congratulations! You've successfully set up the "Retrieve Me" project on your lo
 
 Happy coding! 🚀
 
+## Extras you might need:
+
+1.  You have to add flutterfire CLI to add firebase in your project. To do that:
+   ``` bash
+npm install -g firebase-tools
+dart pub global activate flutterfire_cli
+```
+
 ## Team Members:
 1. Imran Farid
 2. Ramisa Zahara Matin
