@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:retrieve_me/Components/my_textfield.dart';
 import '../firebase_options.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -92,12 +93,18 @@ class RegistrationPageState extends State<RegistrationPage> {
       ),
       builder: (context, snapshot) {
         return Container(
+          // padding: EdgeInsets.all(10.0), // Padding for the box
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.deepPurple, Colors.blue],
+              colors: [
+                Color.fromARGB(255, 45, 44, 46),
+                Color.fromARGB(255, 5, 63, 111)
+              ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
+
+            // Box shape
           ),
           child: Center(
             child: Padding(
@@ -109,13 +116,15 @@ class RegistrationPageState extends State<RegistrationPage> {
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: DrawerHeader(
                         child: Align(
-                          alignment: Alignment.center,
+                          alignment: Alignment.centerLeft,
                           child: Text(
-                            'Registration',
-                            style: GoogleFonts.raleway(
+                            'REGISTRATION',
+                            style: GoogleFonts.oswald(
                               // Google font
                               textStyle: TextStyle(
-                                  fontSize: 35, fontWeight: FontWeight.bold),
+                                  fontSize: 35,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -123,14 +132,25 @@ class RegistrationPageState extends State<RegistrationPage> {
                     ),
                     // const Text('Registration', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold  )),
                     // const Divider(color: Colors.white, thickness: 1, indent:12, endIndent: 12 ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 16),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.75,
                       child: TextFormField(
                         controller: firstNameController,
+                        autofocus: true,
                         decoration: const InputDecoration(
                           labelText: 'First Name',
+                          labelStyle: TextStyle(
+                              color: Color.fromARGB(179, 223, 206, 206)),
                           prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(
+                                    255, 156, 178, 197)), // Border color
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10.0)), // Border radius
+                          ),
+                          hintText: 'John',
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
@@ -140,12 +160,22 @@ class RegistrationPageState extends State<RegistrationPage> {
                     ),
                     const SizedBox(height: 16),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.75,
                       child: TextFormField(
                         controller: lastNameController,
                         decoration: const InputDecoration(
                           labelText: 'Last Name',
+                          labelStyle: TextStyle(
+                              color: Color.fromARGB(179, 223, 206, 206)),
                           prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(
+                                    255, 156, 178, 197)), // Border color
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10.0)), // Border radius
+                          ),
+                          hintText: 'Doe',
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
@@ -154,31 +184,39 @@ class RegistrationPageState extends State<RegistrationPage> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: TextFormField(
-                        controller: contactNumberController,
-                        decoration: const InputDecoration(
-                          labelText: 'Contact Number',
-                          prefixIcon: Icon(Icons.phone),
-                        ),
-                        keyboardType: TextInputType.phone, // set keyboardType
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ], // Allow digits only
-                      ),
+                    MyTextField(
+                      controller: contactNumberController,
+                      hintText: '', // You can provide a hint text here
+                      obscureText: false, // Set to true for password fields
+                      prefixIcon: Icons.phone,
+                      labelText: 'Contact Number',
+                      keyboardType: TextInputType
+                          .phone, // Set keyboardType to allow numeric input
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ], // Allow digits only
                     ),
+
                     SizedBox(height: 16),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.75,
                       child: TextFormField(
                         controller: emailController,
                         enableSuggestions: false,
                         autocorrect: false,
-                        autofocus: true,
+                        // autofocus: true,
                         decoration: const InputDecoration(
                           labelText: 'Email',
+                          labelStyle: TextStyle(
+                              color: Color.fromARGB(179, 223, 206, 206)),
                           prefixIcon: Icon(Icons.email),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(
+                                    255, 156, 178, 197)), // Border color
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10.0)), // Border radius
+                          ),
                           hintText: 'johnKais@email.com',
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -186,7 +224,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                     ),
                     SizedBox(height: 16),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.75,
                       child: TextFormField(
                         controller: passwordController,
                         obscureText: true,
@@ -194,13 +232,22 @@ class RegistrationPageState extends State<RegistrationPage> {
                         autocorrect: false,
                         decoration: const InputDecoration(
                           labelText: 'Password',
+                          labelStyle: TextStyle(
+                              color: Color.fromARGB(179, 223, 206, 206)),
                           prefixIcon: Icon(Icons.lock),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(
+                                    255, 156, 178, 197)), // Border color
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10.0)), // Border radius
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 16),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.75,
                       child: TextButton(
                         onPressed: _insertImage,
                         style: TextButton.styleFrom(
