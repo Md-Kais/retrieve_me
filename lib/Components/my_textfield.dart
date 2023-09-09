@@ -30,6 +30,7 @@ class MyTextField extends StatelessWidget {
         keyboardType: keyboardType, // Use keyboardType here (can be null)
         inputFormatters:
             inputFormatters, // Use inputFormatters here (can be null)
+        style: TextStyle(color: Color.fromRGBO(20, 245, 210, 55)),
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(color: Color.fromARGB(179, 223, 206, 206)),

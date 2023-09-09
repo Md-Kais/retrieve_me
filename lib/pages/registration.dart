@@ -1,3 +1,5 @@
+import 'dart:js_util';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,6 +22,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   XFile? selectedImage;
@@ -65,6 +68,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     return firstNameController.text.isNotEmpty &&
         lastNameController.text.isNotEmpty &&
         contactNumberController.text.isNotEmpty &&
+        addressController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         passwordController.text.isNotEmpty &&
         selectedImage != null;
@@ -74,6 +78,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     firstNameController.clear();
     lastNameController.clear();
     contactNumberController.clear();
+    addressController.clear();
     emailController.clear();
     passwordController.clear();
   }
@@ -155,7 +160,16 @@ class RegistrationPageState extends State<RegistrationPage> {
                         FilteringTextInputFormatter.digitsOnly
                       ], // Allow digits only
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
+                    MyTextField(
+                        controller: addressController,
+                        hintText: 'Zero Point, Chittagong University Road, New Mooring Chittagong',
+                        obscureText: false,
+                        prefixIcon: Icons.location_city,
+                        labelText: 'Address',
+                      keyboardType: TextInputType.text,
+                    ),
+                    const SizedBox(height: 16),
                     MyTextField(
                       controller: emailController,
                       hintText: 'johnKais@email.com',
@@ -164,7 +178,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                       labelText: 'Email',
                       keyboardType: TextInputType.emailAddress,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     MyTextField(
                       controller: passwordController,
                       hintText: '',
@@ -173,7 +187,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                       labelText: 'Password',
                       keyboardType: TextInputType.text,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.75,
                       child: TextButton(
@@ -184,7 +198,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         child: const Text('Insert Profile Image'),
                       ),
                     ),
-                    SizedBox(height: 36),
+                    const SizedBox(height: 36),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -195,7 +209,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                               textStyle: TextStyle(color: Colors.blueAccent)),
                           child: const Text('Reset'),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         ElevatedButton(
                           onPressed: () async {
                             final firstName = firstNameController.text;
@@ -213,7 +227,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 30), //
+                    const SizedBox(height: 30), //
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -221,7 +235,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                           'Already a member?',
                           style: TextStyle(color: Colors.grey[700]),
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width:4),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(
