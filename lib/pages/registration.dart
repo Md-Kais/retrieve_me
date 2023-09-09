@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:retrieve_me/Components/my_textfield.dart';
 import '../firebase_options.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -81,19 +80,13 @@ class RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //
-        // appBar: AppBar(
-        //   title: const Text('Registration'),
-        //
-        // ),
-
         body: FutureBuilder(
-      future: Firebase.initializeApp(
+        future: Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),
       builder: (context, snapshot) {
         return Container(
-          // padding: EdgeInsets.all(10.0), // Padding for the box
+    
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -103,8 +96,6 @@ class RegistrationPageState extends State<RegistrationPage> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
-
-            // Box shape
           ),
           child: Center(
             child: Padding(
@@ -130,120 +121,57 @@ class RegistrationPageState extends State<RegistrationPage> {
                         ),
                       ),
                     ),
-                    // const Text('Registration', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold  )),
-                    // const Divider(color: Colors.white, thickness: 1, indent:12, endIndent: 12 ),
                     const SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: TextFormField(
-                        controller: firstNameController,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                          labelText: 'First Name',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(179, 223, 206, 206)),
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 156, 178, 197)), // Border color
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)), // Border radius
-                          ),
-                          hintText: 'John',
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[a-zA-Z. ]'))
-                        ], // Allow letters and periods
-                      ),
+                    MyTextField(
+                      controller: firstNameController,
+                      hintText: 'John',
+                      obscureText: false,
+                      prefixIcon: Icons.person,
+                      labelText: 'First Name',
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
+                      ],
                     ),
                     const SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: TextFormField(
-                        controller: lastNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Last Name',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(179, 223, 206, 206)),
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 156, 178, 197)), // Border color
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)), // Border radius
-                          ),
-                          hintText: 'Doe',
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[a-zA-Z. ]'))
-                        ], // Allow letters and periods
-                      ),
+                    MyTextField(
+                      controller: lastNameController,
+                      hintText: 'Doe',
+                      obscureText: false,
+                      prefixIcon: Icons.person,
+                      labelText: 'Last Name',
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
+                      ],
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     MyTextField(
                       controller: contactNumberController,
                       hintText: '', // You can provide a hint text here
                       obscureText: false, // Set to true for password fields
                       prefixIcon: Icons.phone,
                       labelText: 'Contact Number',
-                      keyboardType: TextInputType
-                          .phone, // Set keyboardType to allow numeric input
+                      keyboardType: TextInputType.phone,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly
                       ], // Allow digits only
                     ),
-
                     SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: TextFormField(
-                        controller: emailController,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        // autofocus: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(179, 223, 206, 206)),
-                          prefixIcon: Icon(Icons.email),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 156, 178, 197)), // Border color
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)), // Border radius
-                          ),
-                          hintText: 'johnKais@email.com',
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
+                    MyTextField(
+                      controller: emailController,
+                      hintText: 'johnKais@email.com',
+                      obscureText: false,
+                      prefixIcon: Icons.email,
+                      labelText: 'Email',
+                      keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: TextFormField(
-                        controller: passwordController,
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(179, 223, 206, 206)),
-                          prefixIcon: Icon(Icons.lock),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 156, 178, 197)), // Border color
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)), // Border radius
-                          ),
-                        ),
-                      ),
+                    MyTextField(
+                      controller: passwordController,
+                      hintText: '',
+                      obscureText: true,
+                      prefixIcon: Icons.lock,
+                      labelText: 'Password',
+                      keyboardType: TextInputType.text,
                     ),
                     SizedBox(height: 16),
                     Container(
