@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:retrieve_me/Pages/registration.dart';
+import 'package:retrieve_me/pages/registration.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
