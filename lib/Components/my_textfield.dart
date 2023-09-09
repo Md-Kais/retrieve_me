@@ -30,20 +30,22 @@ class MyTextField extends StatelessWidget {
         keyboardType: keyboardType, // Use keyboardType here (can be null)
         inputFormatters:
             inputFormatters, // Use inputFormatters here (can be null)
-        style: TextStyle(color: Color.fromRGBO(20, 245, 210, 55)),
+        style: TextStyle(color: Color.fromRGBO(20, 255, 210, 75)),
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(color: Color.fromARGB(179, 223, 206, 206)),
           prefixIcon: Icon(prefixIcon),
+          prefixIconColor: Color.fromRGBO(255, 255, 255, 100),
           border: OutlineInputBorder(
             borderSide: BorderSide(
               color: Color.fromARGB(255, 156, 178, 197), // Border color
             ),
             borderRadius: BorderRadius.all(
-              Radius.circular(10.0), // Border radius
+              Radius.circular(15.0), // Border radius
             ),
           ),
           hintText: hintText,
+          hintStyle: TextStyle(color: Color.fromRGBO(130, 130, 50, 50)),
         ),
       ),
     );

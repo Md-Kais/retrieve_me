@@ -27,8 +27,18 @@ class RegistrationPageState extends State<RegistrationPage> {
   TextEditingController passwordController = TextEditingController();
   XFile? selectedImage;
 
-  void _submitRegistration() {
+  Future<void> _submitRegistration() async {
     if (_areAllFieldsFilled()) {
+      final firstName = firstNameController.text;
+      final lastName = lastNameController.text;
+      final contactNumber = contactNumberController.text;
+      final email = emailController.text;
+      final password = passwordController.text;
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       //route to new page
       //   confirm registration and insert to database
       //   Navigator.push(
@@ -151,7 +161,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 16),
                     MyTextField(
                       controller: contactNumberController,
-                      hintText: '', // You can provide a hint text here
+                      hintText: '01765432109', // You can provide a hint text here
                       obscureText: false, // Set to true for password fields
                       prefixIcon: Icons.phone,
                       labelText: 'Contact Number',
@@ -194,36 +204,50 @@ class RegistrationPageState extends State<RegistrationPage> {
                         onPressed: _insertImage,
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.cyan,
-                            shadowColor: Colors.green),
-                        child: const Text('Insert Profile Image'),
+                            shadowColor: Colors.green,
+                        ),
+                        child: const Text('Insert Profile Image', style: TextStyle(
+                          color: Colors.brown,
+                          fontWeight: FontWeight.bold,
+                        )),
                       ),
                     ),
                     const SizedBox(height: 36),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: _resetFields,
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.blueGrey,
-                              textStyle: TextStyle(color: Colors.blueAccent)),
-                          child: const Text('Reset'),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.250,
+                          child: ElevatedButton(
+                            onPressed: _resetFields,
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                            ),
+                            child: const Text('Reset', style: TextStyle(
+                              color: Colors.deepPurpleAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Checkbox.width * 0.90,
+                            )),
+                          ),
                         ),
                         const SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final firstName = firstNameController.text;
-                            final lastName = lastNameController.text;
-                            final contactNumber = contactNumberController.text;
-                            final email = emailController.text;
-                            final password = passwordController.text;
-                            await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                              email: email,
-                              password: password,
-                            );
-                          },
-                          child: const Text('Register'),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.250,
+                          child: ElevatedButton(
+                            onPressed: _submitRegistration,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              // splashFactory: InkRipple.splashFactory,
+                            ),
+                            child: const Text('Register', style: TextStyle(
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                                fontSize: Checkbox.width * 0.90,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -233,7 +257,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                       children: [
                         Text(
                           'Already a member?',
-                          style: TextStyle(color: Colors.grey[700]),
+                          style: TextStyle(color: Colors.grey[500]),
                         ),
                         const SizedBox(width:4),
                         GestureDetector(
