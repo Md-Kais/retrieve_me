@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:retrieve_me/Components/my_textfield.dart';
+import 'package:retrieve_me/pages/login.dart';
 import '../firebase_options.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -81,12 +82,11 @@ class RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder(
-        future: Firebase.initializeApp(
+      future: Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),
       builder: (context, snapshot) {
         return Container(
-    
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -184,7 +184,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         child: const Text('Insert Profile Image'),
                       ),
                     ),
-                    SizedBox(height: 56),
+                    SizedBox(height: 36),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -213,6 +213,33 @@ class RegistrationPageState extends State<RegistrationPage> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 30), //
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Already a member?',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                        SizedBox(width: 4),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            ' Log In ',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
