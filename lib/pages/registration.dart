@@ -34,6 +34,20 @@ class RegistrationPageState extends State<RegistrationPage> {
       final contactNumber = contactNumberController.text;
       final email = emailController.text;
       final password = passwordController.text;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Registered Sucessfully!'),
+          content:
+          Text('You have created a new account now!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Okay'),
+            ),
+          ],
+        ),
+      );
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
         email: email,
@@ -147,6 +161,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
                       ],
                     ),
+
                     const SizedBox(height: 16),
                     MyTextField(
                       controller: lastNameController,
@@ -200,6 +215,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 16),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.75,
+                      height: MediaQuery.of(context).size.height * 0.075,
                       child: TextButton(
                         onPressed: _insertImage,
                         style: TextButton.styleFrom(

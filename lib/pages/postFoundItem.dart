@@ -102,13 +102,14 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
                           const SizedBox(height: 16),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.75,
+                            height: MediaQuery.of(context).size.height * 0.075,
                             child: TextButton(
                               onPressed: _insertImage,
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.cyan,
                                 shadowColor: Colors.green,
                               ),
-                              child: const Text('Insert Profile Image', style: TextStyle(
+                              child: const Text('Insert Found Product Image', style: TextStyle(
                                 color: Colors.brown,
                                 fontWeight: FontWeight.bold,
                               )
@@ -245,7 +246,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
                           ),
                           const SizedBox(height: 16),
                           BackButton(style:  ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
+                            backgroundColor: Colors.greenAccent,
                           )),
                           const SizedBox(height: 32),
                           Row(

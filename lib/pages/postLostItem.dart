@@ -115,13 +115,14 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
                     const SizedBox(height: 16),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.75,
+                        height: MediaQuery.of(context).size.height * 0.075,
                           child: TextButton(
                           onPressed: _insertImage,
                           style: TextButton.styleFrom(
                           backgroundColor: Colors.cyan,
                           shadowColor: Colors.green,
                         ),
-                      child: const Text('Insert Profile Image', style: TextStyle(
+                      child: const Text('Insert Lost Product Image', style: TextStyle(
                             color: Colors.brown,
                             fontWeight: FontWeight.bold,
                           )
@@ -168,7 +169,7 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
                       const SizedBox(height: 16),
                       MyTextField(
                       controller: whatWasLost,
-                      hintText: '',
+                      hintText: 'Walton Primo RX7',
                       obscureText: false,
                       prefixIcon: Icons.cases,
                       labelText: 'What was Lost',
