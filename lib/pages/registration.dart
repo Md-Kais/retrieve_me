@@ -25,6 +25,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  
   XFile? selectedImage;
 
   Future<void> _submitRegistration() async {
@@ -34,6 +35,11 @@ class RegistrationPageState extends State<RegistrationPage> {
       final contactNumber = contactNumberController.text;
       final email = emailController.text;
       final password = passwordController.text;
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -47,11 +53,6 @@ class RegistrationPageState extends State<RegistrationPage> {
             ),
           ],
         ),
-      );
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-        email: email,
-        password: password,
       );
       //route to new page
       //   confirm registration and insert to database
@@ -161,7 +162,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
                       ],
                     ),
-
+                    
                     const SizedBox(height: 16),
                     MyTextField(
                       controller: lastNameController,

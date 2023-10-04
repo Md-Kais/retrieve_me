@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,6 +36,7 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
   TextEditingController divisionController = TextEditingController();
   TextEditingController unionVillageController = TextEditingController();
   TextEditingController streetHouseController = TextEditingController();
+  DateTime? dateTimeController = DateTime.now();
 
   void _insertImage() async {
     final selector = ImagePicker();
@@ -44,6 +46,95 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
       setState(() {
         selectedImage = selectedFile;
       });
+    }
+  }
+  bool areAllFieldsFilled() {
+    return whatWasLost.text.isNotEmpty &&
+        itemCategory.text.isNotEmpty &&
+        additionalInfo.text.isNotEmpty &&
+        cityController.text.isNotEmpty &&
+        divisionController.text.isNotEmpty &&
+        unionVillageController.text.isNotEmpty &&
+        streetHouseController.text.isNotEmpty &&
+        selectedImage != null &&
+    dateTimeController != null;
+  }
+
+  Future<void> submitLostItem() async {
+    if(areAllFieldsFilled()) {
+      try {
+        // Create a Firestore instance
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        CollectionReference collectionReference = firestore.collection(
+            'LostProduct');
+
+        Timestamp dateTimeTimestamp = Timestamp.fromDate(dateTimeController!);
+
+        // Define a map with the data to be saved
+        Map<String, dynamic> lostItemData = {
+          'LostItem': whatWasLost.text,
+          'Category': itemCategory.text,
+          'DateTime': dateTimeTimestamp,
+          'Description': additionalInfo.text,
+          'CityLocation': cityController.text,
+          'DivisionLocation': divisionController.text,
+          'UnionVillageLocation': unionVillageController.text,
+          'StreetHouseLocation': streetHouseController.text,
+        };
+        await collectionReference.add(lostItemData);
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Lost Item Posted!', textAlign: TextAlign.center),
+            content:
+            Text('You have successfully created your Lost Item post!'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Okay'),
+              ),
+            ],
+          ),
+        );
+
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => LoginPage(),
+        //   ),
+        // );
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                content:
+                Text('Error submitting lost item info'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Okay'),
+                  ),
+                ],
+              ),
+        );
+      }
+    }
+    else{
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content:
+          Text('Please fill all the required fields before submitting!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Okay'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -136,20 +227,24 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
                           alignment: Alignment.center,
                           child: DateTimePicker(
                             // timeFieldWidth: MediaQuery.of(context).size.width * 0.35,
-                            type: DateTimePickerType.dateTimeSeparate,
+                            type: DateTimePickerType.dateTimeSeparate,  // Adjust the type based on your requirements
                             dateMask: 'd MMM, yyyy',
                             initialValue: DateTime.now().toString(),
-                            firstDate: DateTime(2000),
+                            firstDate: DateTime(2000),  // Adjust the firstDate based on your requirements
                             lastDate: DateTime(2099),
                             icon: Icon(Icons.date_range_sharp),
                             dateLabelText: 'Date',
-                            style: TextStyle(color: Colors.deepOrangeAccent,
-                              fontWeight: FontWeight.bold,),
+                            style: TextStyle(
+                              color: Colors.deepOrangeAccent,
+                              fontWeight: FontWeight.bold,
+                            ),
                             timeLabelText: "Hour",
-                            selectableDayPredicate: (date){
+                            selectableDayPredicate: (date) {
                               return true;
                             },
-                            onSaved: (value) => {print(value)
+                            onChanged: (value) => {
+                              dateTimeController = DateTime.parse(value),
+                              // dateTimeController = value as DateTimePicker,
                             },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
@@ -163,7 +258,7 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
                             )
                             ,
                           ),
-                        )
+                        ),
                       ),
 
                       const SizedBox(height: 16),
@@ -277,7 +372,7 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
                               height: MediaQuery.of(context).size.height * 0.05,
                               width: MediaQuery.of(context).size.width * 0.250,
                               child: ElevatedButton(
-                                onPressed: () => {},
+                                onPressed: submitLostItem,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
                                   // splashFactory: InkRipple.splashFactory,

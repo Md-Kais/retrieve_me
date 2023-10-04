@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,13 +19,14 @@ class PostFoundItemPage extends StatefulWidget {
 
 class _PostFoundItemPageState extends State<PostFoundItemPage> {
   XFile? selectedImage;
-  TextEditingController whatWasLost = TextEditingController();
+  TextEditingController whatWasFound = TextEditingController();
   TextEditingController itemCategory = TextEditingController();
   TextEditingController additionalInfo = TextEditingController();
   TextEditingController cityController = TextEditingController();
   TextEditingController divisionController = TextEditingController();
   TextEditingController unionVillageController = TextEditingController();
   TextEditingController streetHouseController = TextEditingController();
+  DateTime? dateTimeController = DateTime.now();
 
   void _insertImage() async {
     final selector = ImagePicker();
@@ -36,6 +38,97 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
       });
     }
   }
+
+  bool areAllFieldsFilled() {
+    return whatWasFound.text.isNotEmpty &&
+        itemCategory.text.isNotEmpty &&
+        additionalInfo.text.isNotEmpty &&
+        cityController.text.isNotEmpty &&
+        divisionController.text.isNotEmpty &&
+        unionVillageController.text.isNotEmpty &&
+        streetHouseController.text.isNotEmpty &&
+        selectedImage != null &&
+        dateTimeController != null;
+  }
+
+  Future<void> submitFoundItem() async {
+    if(areAllFieldsFilled()) {
+      try {
+        // Create a Firestore instance
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        CollectionReference collectionReference = firestore.collection(
+            'FoundProduct');
+
+        Timestamp dateTimeTimestamp = Timestamp.fromDate(dateTimeController!);
+
+        // Define a map with the data to be saved
+        Map<String, dynamic> foundItemData = {
+          'FoundItem': whatWasFound.text,
+          'Category': itemCategory.text,
+          'DateTime': dateTimeTimestamp,
+          'Description': additionalInfo.text,
+          'CityLocation': cityController.text,
+          'DivisionLocation': divisionController.text,
+          'UnionVillageLocation': unionVillageController.text,
+          'StreetHouseLocation': streetHouseController.text,
+        };
+        await collectionReference.add(foundItemData);
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Found Item Posted!', textAlign: TextAlign.center),
+            content:
+            Text('You have successfully created your Found Item post!'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Okay'),
+              ),
+            ],
+          ),
+        );
+
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => LoginPage(),
+        //   ),
+        // );
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                content:
+                Text('Error submitting lost item info'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Okay'),
+                  ),
+                ],
+              ),
+        );
+      }
+    }
+    else{
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content:
+          Text('Please fill all the required fields before submitting!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +229,9 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
                                   selectableDayPredicate: (date){
                                     return true;
                                   },
-                                  onSaved: (value) => {print(value)
+                                  onChanged: (value) => {
+                                    dateTimeController = DateTime.parse(value),
+                                    // dateTimeController = value as DateTimePicker,
                                   },
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
@@ -155,9 +250,9 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
 
                           const SizedBox(height: 16),
                           MyTextField(
-                            controller: whatWasLost,
+                            controller: whatWasFound,
                             hintText: '',
-                            obscureText: true,
+                            obscureText: false,
                             prefixIcon: Icons.cases,
                             labelText: 'What was Found',
                             keyboardType: TextInputType.text,
@@ -257,7 +352,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
                                 height: MediaQuery.of(context).size.height * 0.05,
                                 width: MediaQuery.of(context).size.width * 0.250,
                                 child: ElevatedButton(
-                                  onPressed: () => {},
+                                  onPressed: submitFoundItem,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
                                     // splashFactory: InkRipple.splashFactory,
