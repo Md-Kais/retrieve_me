@@ -1,10 +1,12 @@
+import 'dart:js_util';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:retrieve_me/Components/my_textfield.dart';
+import 'package:retrieve_me/pages/login.dart';
 import '../firebase_options.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,12 +22,38 @@ class RegistrationPageState extends State<RegistrationPage> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  
   XFile? selectedImage;
 
-  void _submitRegistration() {
+  Future<void> _submitRegistration() async {
     if (_areAllFieldsFilled()) {
+      final firstName = firstNameController.text;
+      final lastName = lastNameController.text;
+      final contactNumber = contactNumberController.text;
+      final email = emailController.text;
+      final password = passwordController.text;
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Registered Sucessfully!'),
+          content:
+          Text('You have created a new account now!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Okay'),
+            ),
+          ],
+        ),
+      );
       //route to new page
       //   confirm registration and insert to database
       //   Navigator.push(
@@ -65,6 +93,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     return firstNameController.text.isNotEmpty &&
         lastNameController.text.isNotEmpty &&
         contactNumberController.text.isNotEmpty &&
+        addressController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         passwordController.text.isNotEmpty &&
         selectedImage != null;
@@ -74,6 +103,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     firstNameController.clear();
     lastNameController.clear();
     contactNumberController.clear();
+    addressController.clear();
     emailController.clear();
     passwordController.clear();
   }
@@ -81,19 +111,12 @@ class RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //
-        // appBar: AppBar(
-        //   title: const Text('Registration'),
-        //
-        // ),
-
         body: FutureBuilder(
       future: Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),
       builder: (context, snapshot) {
         return Container(
-          // padding: EdgeInsets.all(10.0), // Padding for the box
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -103,8 +126,6 @@ class RegistrationPageState extends State<RegistrationPage> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
-
-            // Box shape
           ),
           child: Center(
             child: Padding(
@@ -130,161 +151,150 @@ class RegistrationPageState extends State<RegistrationPage> {
                         ),
                       ),
                     ),
-                    // const Text('Registration', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold  )),
-                    // const Divider(color: Colors.white, thickness: 1, indent:12, endIndent: 12 ),
                     const SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: TextFormField(
-                        controller: firstNameController,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                          labelText: 'First Name',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(179, 223, 206, 206)),
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 156, 178, 197)), // Border color
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)), // Border radius
-                          ),
-                          hintText: 'John',
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[a-zA-Z. ]'))
-                        ], // Allow letters and periods
-                      ),
+                    MyTextField(
+                      controller: firstNameController,
+                      hintText: 'John',
+                      obscureText: false,
+                      prefixIcon: Icons.person,
+                      labelText: 'First Name',
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    MyTextField(
+                      controller: lastNameController,
+                      hintText: 'Doe',
+                      obscureText: false,
+                      prefixIcon: Icons.person,
+                      labelText: 'Last Name',
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
+                      ],
                     ),
                     const SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: TextFormField(
-                        controller: lastNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Last Name',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(179, 223, 206, 206)),
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 156, 178, 197)), // Border color
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)), // Border radius
-                          ),
-                          hintText: 'Doe',
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[a-zA-Z. ]'))
-                        ], // Allow letters and periods
-                      ),
-                    ),
-                    SizedBox(height: 16),
                     MyTextField(
                       controller: contactNumberController,
-                      hintText: '', // You can provide a hint text here
+                      hintText: '01765432109', // You can provide a hint text here
                       obscureText: false, // Set to true for password fields
                       prefixIcon: Icons.phone,
                       labelText: 'Contact Number',
-                      keyboardType: TextInputType
-                          .phone, // Set keyboardType to allow numeric input
+                      keyboardType: TextInputType.phone,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly
                       ], // Allow digits only
                     ),
-
-                    SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: TextFormField(
-                        controller: emailController,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        // autofocus: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(179, 223, 206, 206)),
-                          prefixIcon: Icon(Icons.email),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 156, 178, 197)), // Border color
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)), // Border radius
-                          ),
-                          hintText: 'johnKais@email.com',
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
+                    const SizedBox(height: 16),
+                    MyTextField(
+                        controller: addressController,
+                        hintText: 'Zero Point, Chittagong University Road, New Mooring Chittagong',
+                        obscureText: false,
+                        prefixIcon: Icons.location_city,
+                        labelText: 'Address',
+                      keyboardType: TextInputType.text,
                     ),
-                    SizedBox(height: 16),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: TextFormField(
-                        controller: passwordController,
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(179, 223, 206, 206)),
-                          prefixIcon: Icon(Icons.lock),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(
-                                    255, 156, 178, 197)), // Border color
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)), // Border radius
-                          ),
-                        ),
-                      ),
+                    const SizedBox(height: 16),
+                    MyTextField(
+                      controller: emailController,
+                      hintText: 'johnKais@email.com',
+                      obscureText: false,
+                      prefixIcon: Icons.email,
+                      labelText: 'Email',
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
+                    MyTextField(
+                      controller: passwordController,
+                      hintText: '',
+                      obscureText: true,
+                      prefixIcon: Icons.lock,
+                      labelText: 'Password',
+                      keyboardType: TextInputType.text,
+                    ),
+                    const SizedBox(height: 16),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.75,
+                      height: MediaQuery.of(context).size.height * 0.075,
                       child: TextButton(
                         onPressed: _insertImage,
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.cyan,
-                            shadowColor: Colors.green),
-                        child: const Text('Insert Profile Image'),
+                            shadowColor: Colors.green,
+                        ),
+                        child: const Text('Insert Profile Image', style: TextStyle(
+                          color: Colors.brown,
+                          fontWeight: FontWeight.bold,
+                        )),
                       ),
                     ),
-                    SizedBox(height: 56),
+                    const SizedBox(height: 36),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: _resetFields,
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.blueGrey,
-                              textStyle: TextStyle(color: Colors.blueAccent)),
-                          child: const Text('Reset'),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.250,
+                          child: ElevatedButton(
+                            onPressed: _resetFields,
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                            ),
+                            child: const Text('Reset', style: TextStyle(
+                              color: Colors.deepPurpleAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Checkbox.width * 0.90,
+                            )),
+                          ),
                         ),
-                        SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () async {
-                            final firstName = firstNameController.text;
-                            final lastName = lastNameController.text;
-                            final contactNumber = contactNumberController.text;
-                            final email = emailController.text;
-                            final password = passwordController.text;
-                            await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                              email: email,
-                              password: password,
-                            );
-                          },
-                          child: const Text('Register'),
+                        const SizedBox(width: 16),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          width: MediaQuery.of(context).size.width * 0.250,
+                          child: ElevatedButton(
+                            onPressed: _submitRegistration,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              // splashFactory: InkRipple.splashFactory,
+                            ),
+                            child: const Text('Register', style: TextStyle(
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                                fontSize: Checkbox.width * 0.90,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 30), //
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Already a member?',
+                          style: TextStyle(color: Colors.grey[500]),
+                        ),
+                        const SizedBox(width:4),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            ' Log In ',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),

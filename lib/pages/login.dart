@@ -1,160 +1,217 @@
-// import 'package:flutter/material.dart';
+import 'dart:js';
 
-// import 'package:retrieve_me/Components/my_textfield.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:retrieve_me/Components/my_button.dart';
+import 'package:retrieve_me/Components/my_textfield.dart';
+import 'package:retrieve_me/Components/square_tile.dart';
+import 'package:retrieve_me/firebase_options.dart';
+import 'package:retrieve_me/pages/postLostItem.dart';
+import 'package:retrieve_me/pages/registration.dart';
 
+class LoginPage extends StatelessWidget {
+  LoginPage({Key? key});
 
-// class LoginPage extends StatelessWidget {
-//   LoginPage({super.key});
+  // text editing controllers
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  // sign user in method
+  Future<void> signUserIn(BuildContext context) async {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PostLostItemPage(),
+      ),
+    );
+  }
 
-//   // text editing controllers
-//   final usernameController = TextEditingController();
-//   final passwordController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        builder: (context, snapshot) {
+          return Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 45, 44, 46),
+                  Color.fromARGB(255, 5, 63, 111)
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: DrawerHeader(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'LOG IN',
+                              style: GoogleFonts.oswald(
+                                textStyle: TextStyle(
+                                  fontSize: 35,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 50), // Removed 'const'
 
-//   // sign user in method
-//   void signUserIn() {}
+                      // welcome back, you've been missed!
+                      Text(
+                        'Welcome back you\'ve been missed!',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 16,
+                        ),
+                      ),
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.grey[300],
-//       body: SafeArea(
-//         child: Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               const SizedBox(height: 50),
+                      SizedBox(height: 25), // Removed 'const'
 
-//               // logo
-//               const Icon(
-//                 Icons.lock,
-//                 size: 100,
-//               ),
+                      // username textfield
 
-//               const SizedBox(height: 50),
+                      SizedBox(height: 16),
+                      MyTextField(
+                        controller: emailController,
+                        hintText: 'johnKais@email.com',
+                        obscureText: false,
+                        prefixIcon: Icons.email,
+                        labelText: 'Email',
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      SizedBox(height: 16),
+                      MyTextField(
+                        controller: passwordController,
+                        hintText: '',
+                        obscureText: true,
+                        prefixIcon: Icons.lock,
+                        labelText: 'Password',
+                        keyboardType: TextInputType.text,
+                      ),
 
-//               // welcome back, you've been missed!
-//               Text(
-//                 'Welcome back you\'ve been missed!',
-//                 style: TextStyle(
-//                   color: Colors.grey[700],
-//                   fontSize: 16,
-//                 ),
-//               ),
+                      SizedBox(height: 10), // Removed 'const'
 
-//               const SizedBox(height: 25),
+                      // forgot password?
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Forgot Password?',
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                          ],
+                        ),
+                      ),
 
-//               // username textfield
-//               MyTextField(controller: controller, hintText: hintText, obscureText: obscureText, iconText: iconText, labelText: labelText)
-//               MyTextField(
-//                 controller: usernameController,
-//                 hintText: 'Username',
-//                 obscureText: false,
-//                 labelText: 'Email',
-//               ),
+                      SizedBox(height: 25),
 
-//               const SizedBox(height: 10),
+                      // sign in button
+                      MyButton(
+                        onTap: (){
+                              signUserIn(context);
+                              }
+                          ),
 
-//               // password textfield
-//               MyTextField(
-//                 controller: passwordController,
-//                 hintText: 'Password',
-//                 obscureText: true,
-//                 labelText: 'Password',
-//               ),
+                          SizedBox(height: 50), // Removed 'const'
 
-//               const SizedBox(height: 10),
+                          // or continue with
+                          Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Row(
+                          children: [
+                          Expanded(
+                          child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                          ),
+                          ),
+                          Padding(
+                          padding:
+                          const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                          'Or continue with',
+                          style: TextStyle(color: Colors.grey[700]),
+                          ),
+                          ),
+                          Expanded(
+                          child: Divider
+                        (
+                                thickness: 0.5,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
-//               // forgot password?
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.end,
-//                   children: [
-//                     Text(
-//                       'Forgot Password?',
-//                       style: TextStyle(color: Colors.grey[600]),
-//                     ),
-//                   ],
-//                 ),
-//               ),
+                      SizedBox(height: 50), // Removed 'const'
 
-//               const SizedBox(height: 25),
+                      // google + apple sign in buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // google button
+                          SquareTile(imagePath: 'lib/images/google.png'),
 
-//               // sign in button
-//               MyButton(
-//                 onTap: signUserIn,
-//               ),
+                          SizedBox(width: 25),
 
-//               const SizedBox(height: 50),
+                          // apple button
+                          SquareTile(imagePath: 'lib/images/github.png')
+                        ],
+                      ),
 
-//               // or continue with
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
-//                 child: Row(
-//                   children: [
-//                     Expanded(
-//                       child: Divider(
-//                         thickness: 0.5,
-//                         color: Colors.grey[400],
-//                       ),
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-//                       child: Text(
-//                         'Or continue with',
-//                         style: TextStyle(color: Colors.grey[700]),
-//                       ),
-//                     ),
-//                     Expanded(
-//                       child: Divider(
-//                         thickness: 0.5,
-//                         color: Colors.grey[400],
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
+                      SizedBox(height: 50), // Removed 'const'
 
-//               const SizedBox(height: 50),
-
-//               // google + apple sign in buttons
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: const [
-//                   // google button
-//                   SquareTile(imagePath: 'lib/images/google.png'),
-
-//                   SizedBox(width: 25),
-
-//                   // apple button
-//                   SquareTile(imagePath: 'lib/images/apple.png')
-//                 ],
-//               ),
-
-//               const SizedBox(height: 50),
-
-//               // not a member? register now
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Text(
-//                     'Not a member?',
-//                     style: TextStyle(color: Colors.grey[700]),
-//                   ),
-//                   const SizedBox(width: 4),
-//                   const Text(
-//                     'Register now',
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 ],
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+                      // not a member? register now
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Not a member?',
+                            style: TextStyle(color: Colors.grey[700]),
+                          ),
+                          SizedBox(width: 4),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => RegistrationPage(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Register now',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

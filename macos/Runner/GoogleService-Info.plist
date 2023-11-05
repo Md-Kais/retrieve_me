@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>106875158936-v949vjjbj2ef67l3lb0iq5d91j7f4usl.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.106875158936-v949vjjbj2ef67l3lb0iq5d91j7f4usl</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCRvgqsJSXUdsuy3cTApKiNmZiKyoZI7_g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>106875158936</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.kais29.retrieveMe.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>retrieve-me</string>
+	<key>STORAGE_BUCKET</key>
+	<string>retrieve-me.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:106875158936:ios:dddb3b93084d9675b62bed</string>
+</dict>
+</plist>
