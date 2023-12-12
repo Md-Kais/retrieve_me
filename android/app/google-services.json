@@ -29,6 +29,13 @@
             {
               "client_id": "106875158936-97c5fo3suetjk4ogbpjpb0f9sd3gvsmv.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "106875158936-crekq3denfoplf602lg59j9fo17okm2r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kais29.retrieveMe"
+              }
             }
           ]
         }

@@ -10,7 +10,7 @@ class MyTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters; // Added inputFormatters
   final TextInputType? keyboardType; // Made keyboardType optional
 
-  const MyTextField({
+  const MyTextField({super.key, 
     required this.controller,
     required this.hintText,
     required this.obscureText,
@@ -22,7 +22,7 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width * 0.75,
       child: TextFormField(
         controller: controller,
@@ -30,13 +30,13 @@ class MyTextField extends StatelessWidget {
         keyboardType: keyboardType, // Use keyboardType here (can be null)
         inputFormatters:
             inputFormatters, // Use inputFormatters here (can be null)
-        style: TextStyle(color: Color.fromRGBO(150, 255, 210, 75)),
+        style: const TextStyle(color: Color.fromRGBO(150, 255, 210, 75)),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(color: Color.fromARGB(255, 223, 206, 206)),
+          labelStyle: const TextStyle(color: Color.fromARGB(255, 223, 206, 206)),
           prefixIcon: Icon(prefixIcon),
-          prefixIconColor: Color.fromRGBO(255, 255, 255, 100),
-          border: OutlineInputBorder(
+          prefixIconColor: const Color.fromRGBO(255, 255, 255, 100),
+          border: const OutlineInputBorder(
             borderSide: BorderSide(
               color: Color.fromARGB(255, 156, 178, 197), // Border color
             ),
@@ -45,7 +45,7 @@ class MyTextField extends StatelessWidget {
             ),
           ),
           hintText: hintText,
-          hintStyle: TextStyle(color: Color.fromRGBO(200, 130, 50, 50)),
+          hintStyle: const TextStyle(color: Color.fromRGBO(200, 130, 50, 50)),
         ),
       ),
     );

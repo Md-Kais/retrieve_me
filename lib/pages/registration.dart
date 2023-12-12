@@ -1,4 +1,4 @@
-import 'dart:js_util';
+// import 'dart:js_util';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +25,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  
+
   XFile? selectedImage;
 
   Future<void> _submitRegistration() async {
@@ -35,21 +35,19 @@ class RegistrationPageState extends State<RegistrationPage> {
       final contactNumber = contactNumberController.text;
       final email = emailController.text;
       final password = passwordController.text;
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Registered Sucessfully!'),
-          content:
-          Text('You have created a new account now!'),
+          title: const Text('Registered Sucessfully!'),
+          content: const Text('You have created a new account now!'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Okay'),
+              child: const Text('Okay'),
             ),
           ],
         ),
@@ -64,13 +62,13 @@ class RegistrationPageState extends State<RegistrationPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content:
-              Text('Please fill all the required fields before submitting!'),
+              const Text('Please fill all the required fields before submitting!'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Okay'),
+              child: const Text('Okay'),
             ),
           ],
         ),
@@ -133,7 +131,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: DrawerHeader(
                         child: Align(
@@ -142,7 +140,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                             'REGISTRATION',
                             style: GoogleFonts.oswald(
                               // Google font
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                   fontSize: 35,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -162,7 +160,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
                       ],
                     ),
-                    
+
                     const SizedBox(height: 16),
                     MyTextField(
                       controller: lastNameController,
@@ -177,7 +175,8 @@ class RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 16),
                     MyTextField(
                       controller: contactNumberController,
-                      hintText: '01765432109', // You can provide a hint text here
+                      hintText:
+                          '01765432109', // You can provide a hint text here
                       obscureText: false, // Set to true for password fields
                       prefixIcon: Icons.phone,
                       labelText: 'Contact Number',
@@ -188,11 +187,12 @@ class RegistrationPageState extends State<RegistrationPage> {
                     ),
                     const SizedBox(height: 16),
                     MyTextField(
-                        controller: addressController,
-                        hintText: 'Zero Point, Chittagong University Road, New Mooring Chittagong',
-                        obscureText: false,
-                        prefixIcon: Icons.location_city,
-                        labelText: 'Address',
+                      controller: addressController,
+                      hintText:
+                          'Zero Point, Chittagong University Road, New Mooring Chittagong',
+                      obscureText: false,
+                      prefixIcon: Icons.location_city,
+                      labelText: 'Address',
                       keyboardType: TextInputType.text,
                     ),
                     const SizedBox(height: 16),
@@ -214,19 +214,20 @@ class RegistrationPageState extends State<RegistrationPage> {
                       keyboardType: TextInputType.text,
                     ),
                     const SizedBox(height: 16),
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.75,
                       height: MediaQuery.of(context).size.height * 0.075,
                       child: TextButton(
                         onPressed: _insertImage,
                         style: TextButton.styleFrom(
-                            backgroundColor: Colors.cyan,
-                            shadowColor: Colors.green,
+                          backgroundColor: Colors.cyan,
+                          shadowColor: Colors.green,
                         ),
-                        child: const Text('Insert Profile Image', style: TextStyle(
-                          color: Colors.brown,
-                          fontWeight: FontWeight.bold,
-                        )),
+                        child: const Text('Insert Profile Image',
+                            style: TextStyle(
+                              color: Colors.brown,
+                              fontWeight: FontWeight.bold,
+                            )),
                       ),
                     ),
                     const SizedBox(height: 36),
@@ -239,13 +240,14 @@ class RegistrationPageState extends State<RegistrationPage> {
                           child: ElevatedButton(
                             onPressed: _resetFields,
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
+                              backgroundColor: Colors.black,
                             ),
-                            child: const Text('Reset', style: TextStyle(
-                              color: Colors.deepPurpleAccent,
-                              fontWeight: FontWeight.bold,
-                              fontSize: Checkbox.width * 0.90,
-                            )),
+                            child: const Text('Reset',
+                                style: TextStyle(
+                                  color: Colors.deepPurpleAccent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Checkbox.width * 0.90,
+                                )),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -258,7 +260,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                               backgroundColor: Colors.white,
                               // splashFactory: InkRipple.splashFactory,
                             ),
-                            child: const Text('Register', style: TextStyle(
+                            child: const Text(
+                              'Register',
+                              style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.bold,
                                 fontSize: Checkbox.width * 0.90,
@@ -276,7 +280,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                           'Already a member?',
                           style: TextStyle(color: Colors.grey[500]),
                         ),
-                        const SizedBox(width:4),
+                        const SizedBox(width: 4),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(
@@ -285,7 +289,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                               ),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             ' Log In ',
                             style: TextStyle(
                               color: Colors.blue,
