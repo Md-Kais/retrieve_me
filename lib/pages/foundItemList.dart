@@ -36,7 +36,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
         } else {
           query = FirebaseFirestore.instance
               .collection('FoundProduct')
-              .where('FoundItem', isEqualTo: _searchText)
+              .where('FoundItem', isEqualTo: _searchText.trim())
               .snapshots();
           print('Query result is: $query');
         }
@@ -91,7 +91,11 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
       child: StreamBuilder<QuerySnapshot>(
         stream: query,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -212,6 +216,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
         color: Colors.white,
       ),
       child: TextField(
+        style: TextStyle(color: Colors.amber[50]),
         controller: _searchController,
         decoration: const InputDecoration(
           labelText: 'Search Found Item',

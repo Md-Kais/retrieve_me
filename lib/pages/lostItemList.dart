@@ -36,7 +36,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
         } else {
           query = FirebaseFirestore.instance
               .collection('LostProduct')
-              .where('LostItem', isEqualTo: _searchText)
+              .where('LostItem', isEqualTo: _searchText.trim())
               .snapshots();
           print('Query result is: $query');
         }
@@ -91,7 +91,11 @@ class _LostItemListPageState extends State<LostItemListPage> {
         stream: query,
         // FirebaseFirestore.instance.collection('LostProduct').snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasData) {
             return ListView.builder(
               shrinkWrap: true, // Add shrinkWrap: true to ListView.builder
               itemCount: snapshot.data!.docs.length,
@@ -213,6 +217,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
         color: Colors.white,
       ),
       child: TextField(
+        style: TextStyle(color: Colors.amber[50]),
         controller: _searchController,
         decoration: const InputDecoration(
           labelText: 'Search Lost Item',

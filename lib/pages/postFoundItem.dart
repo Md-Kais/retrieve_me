@@ -79,9 +79,10 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Found Item Posted!', textAlign: TextAlign.center),
-            content:
-                const Text('You have successfully created your Found Item post!'),
+            title:
+                const Text('Found Item Posted!', textAlign: TextAlign.center),
+            content: const Text(
+                'You have successfully created your Found Item post!'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -115,8 +116,8 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content:
-              const Text('Please fill all the required fields before submitting!'),
+          content: const Text(
+              'Please fill all the required fields before submitting!'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -140,259 +141,268 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
               options: DefaultFirebaseOptions.currentPlatform,
             ),
             builder: (context, snapshot) {
-              return Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 45, 44, 46),
-                      Color.fromARGB(255, 5, 63, 111)
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: SingleChildScrollView(
-                      child: Column(children: [
-                        // Lost/Found radio button group
-                        Container(
-                          child: IconButton(
-                              onPressed: () {
-                                _sKey.currentState!.openDrawer();
-                              },
-                              icon: const Icon(
-                                Icons.menu,
-                                color: Colors.white,
-                                size: 30,
-                              )),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: DrawerHeader(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    // Navigator.pop(context);
-                                    // Navigator.of(context).push(
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => PostLostItemPage(),
-                                    //   ),
-                                    // );
-                                  },
-                                  child: const Text(
-                                    ' Lost ',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Checkbox.width * 1.2,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  child: const Text(
-                                    ' Found ',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Checkbox.width * 2,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.75,
-                          height: MediaQuery.of(context).size.height * 0.075,
-                          child: TextButton(
-                            onPressed: _insertImage,
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.cyan,
-                              shadowColor: Colors.green,
-                            ),
-                            child: const Text('Insert Found Product Image',
-                                style: TextStyle(
-                                  color: Colors.brown,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.75,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: DateTimePicker(
-                                // timeFieldWidth: MediaQuery.of(context).size.width * 0.35,
-                                type: DateTimePickerType.dateTimeSeparate,
-                                dateMask: 'd MMM, yyyy',
-                                initialValue: DateTime.now().toString(),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2099),
-                                icon: const Icon(Icons.date_range_sharp),
-                                dateLabelText: 'Date',
-                                style: const TextStyle(
-                                  color: Colors.deepOrangeAccent,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                timeLabelText: "Hour",
-                                selectableDayPredicate: (date) {
-                                  return true;
-                                },
-                                onChanged: (value) => {
-                                  dateTimeController = DateTime.parse(value),
-                                  // dateTimeController = value as DateTimePicker,
-                                },
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(
-                                          255, 156, 178, 197), // Border color
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15.0), // Border radius
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )),
-
-                        const SizedBox(height: 16),
-                        MyTextField(
-                          controller: whatWasFound,
-                          hintText: '',
-                          obscureText: false,
-                          prefixIcon: Icons.cases,
-                          labelText: 'What was Found',
-                          keyboardType: TextInputType.text,
-                        ),
-                        const SizedBox(height: 16),
-                        MyTextField(
-                          controller: itemCategory,
-                          hintText: 'Mobile',
-                          obscureText: false,
-                          prefixIcon: Icons.miscellaneous_services,
-                          labelText: 'Item Category',
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // City
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.25,
-                              child: MyTextField(
-                                controller: divisionController,
-                                hintText: 'Chittagong',
-                                obscureText: false,
-                                prefixIcon: Icons.location_city,
-                                labelText: 'Division',
-                                keyboardType: TextInputType.streetAddress,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[a-zA-Z. ]'))
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.25,
-                              child: MyTextField(
-                                controller: cityController,
-                                hintText: 'Hathazari',
-                                obscureText: false,
-                                prefixIcon: Icons.location_city,
-                                labelText: 'City',
-                                keyboardType: TextInputType.streetAddress,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[a-zA-Z. ]'))
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // City
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.25,
-                              child: MyTextField(
-                                controller: streetHouseController,
-                                hintText: 'Road no: 3, House no: 7',
-                                obscureText: false,
-                                prefixIcon: Icons.location_city,
-                                labelText: 'Street/House No.',
-                                keyboardType: TextInputType.streetAddress,
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.25,
-                              child: MyTextField(
-                                controller: unionVillageController,
-                                hintText: 'Fatikchhari',
-                                obscureText: false,
-                                prefixIcon: Icons.location_city,
-                                labelText: 'Union/Village',
-                                keyboardType: TextInputType.streetAddress,
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        MyTextField(
-                          controller: additionalInfo,
-                          hintText: 'Context and description of item',
-                          obscureText: false,
-                          prefixIcon: Icons.info_outlined,
-                          labelText: 'Additional Info',
-                          keyboardType: TextInputType.text,
-                        ),
-                        const SizedBox(height: 16),
-                        BackButton(
-                            style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.greenAccent,
-                        )),
-                        const SizedBox(height: 32),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(width: 16),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.05,
-                              width: MediaQuery.of(context).size.width * 0.250,
-                              child: ElevatedButton(
-                                onPressed: submitFoundItem,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  // splashFactory: InkRipple.splashFactory,
-                                ),
-                                child: const Text(
-                                  'Submit',
-                                  style: TextStyle(
-                                    color: Colors.deepPurple,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Checkbox.width * 0.90,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ]),
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 45, 44, 46),
+                        Color.fromARGB(255, 5, 63, 111)
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
                   ),
-                ),
-                // },
-              );
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: SingleChildScrollView(
+                        child: Column(children: [
+                          // Lost/Found radio button group
+                          Container(
+                            child: IconButton(
+                                onPressed: () {
+                                  _sKey.currentState!.openDrawer();
+                                },
+                                icon: const Icon(
+                                  Icons.menu,
+                                  color: Colors.white,
+                                  size: 30,
+                                )),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: DrawerHeader(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Navigator.pop(context);
+                                      // Navigator.of(context).push(
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => PostLostItemPage(),
+                                      //   ),
+                                      // );
+                                    },
+                                    child: const Text(
+                                      ' Lost ',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Checkbox.width * 1.2,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    child: const Text(
+                                      ' Found ',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Checkbox.width * 2,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.75,
+                            height: MediaQuery.of(context).size.height * 0.075,
+                            child: TextButton(
+                              onPressed: _insertImage,
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.cyan,
+                                shadowColor: Colors.green,
+                              ),
+                              child: const Text('Insert Found Product Image',
+                                  style: TextStyle(
+                                    color: Colors.brown,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.75,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: DateTimePicker(
+                                  // timeFieldWidth: MediaQuery.of(context).size.width * 0.35,
+                                  type: DateTimePickerType.dateTimeSeparate,
+                                  dateMask: 'd MMM, yyyy',
+                                  initialValue: DateTime.now().toString(),
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime(2099),
+                                  icon: const Icon(Icons.date_range_sharp),
+                                  dateLabelText: 'Date',
+                                  style: const TextStyle(
+                                    color: Colors.deepOrangeAccent,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  timeLabelText: "Hour",
+                                  selectableDayPredicate: (date) {
+                                    return true;
+                                  },
+                                  onChanged: (value) => {
+                                    dateTimeController = DateTime.parse(value),
+                                    // dateTimeController = value as DateTimePicker,
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color.fromARGB(
+                                            255, 156, 178, 197), // Border color
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(15.0), // Border radius
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
+
+                          const SizedBox(height: 16),
+                          MyTextField(
+                            controller: whatWasFound,
+                            hintText: '',
+                            obscureText: false,
+                            prefixIcon: Icons.cases,
+                            labelText: 'What was Found',
+                            keyboardType: TextInputType.text,
+                          ),
+                          const SizedBox(height: 16),
+                          MyTextField(
+                            controller: itemCategory,
+                            hintText: 'Mobile',
+                            obscureText: false,
+                            prefixIcon: Icons.miscellaneous_services,
+                            labelText: 'Item Category',
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              // City
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: MyTextField(
+                                  controller: divisionController,
+                                  hintText: 'Chittagong',
+                                  obscureText: false,
+                                  prefixIcon: Icons.location_city,
+                                  labelText: 'Division',
+                                  keyboardType: TextInputType.streetAddress,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[a-zA-Z. ]'))
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: MyTextField(
+                                  controller: cityController,
+                                  hintText: 'Hathazari',
+                                  obscureText: false,
+                                  prefixIcon: Icons.location_city,
+                                  labelText: 'City',
+                                  keyboardType: TextInputType.streetAddress,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[a-zA-Z. ]'))
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              // City
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: MyTextField(
+                                  controller: streetHouseController,
+                                  hintText: 'Road no: 3, House no: 7',
+                                  obscureText: false,
+                                  prefixIcon: Icons.location_city,
+                                  labelText: 'Street/House No.',
+                                  keyboardType: TextInputType.streetAddress,
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: MyTextField(
+                                  controller: unionVillageController,
+                                  hintText: 'Fatikchhari',
+                                  obscureText: false,
+                                  prefixIcon: Icons.location_city,
+                                  labelText: 'Union/Village',
+                                  keyboardType: TextInputType.streetAddress,
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          MyTextField(
+                            controller: additionalInfo,
+                            hintText: 'Context and description of item',
+                            obscureText: false,
+                            prefixIcon: Icons.info_outlined,
+                            labelText: 'Additional Info',
+                            keyboardType: TextInputType.text,
+                          ),
+                          const SizedBox(height: 16),
+                          BackButton(
+                              style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.greenAccent,
+                          )),
+                          const SizedBox(height: 32),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(width: 16),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.250,
+                                child: ElevatedButton(
+                                  onPressed: submitFoundItem,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    // splashFactory: InkRipple.splashFactory,
+                                  ),
+                                  child: const Text(
+                                    'Submit',
+                                    style: TextStyle(
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: Checkbox.width * 0.90,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ),
+                  // },
+                );
+              }
             }),
       ),
     );
