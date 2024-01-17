@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/drawer_item.dart';
 import 'package:retrieve_me/Components/drawer_items.dart';
+import 'package:retrieve_me/pages/foundItemList.dart';
 import 'package:retrieve_me/pages/lostItemList.dart';
 import 'package:retrieve_me/pages/postFoundItem.dart';
 import 'package:retrieve_me/pages/postLostItem.dart';
@@ -116,7 +117,7 @@ class NavigationDrawerWidget extends StatelessWidget {
         shrinkWrap: true,
         primary: false,
         itemCount: items.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 16),
+        separatorBuilder: (context, index) => const SizedBox(height: 10),
         itemBuilder: (context, index) {
           final item = items[index];
 
@@ -165,6 +166,9 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 'Lost Item List':
         navigateTo(const LostItemListPage());
+        break;
+      case 'Found Item List':
+        navigateTo(const FoundItemListPage());
         break;
       case 'Logout':
         navigateTo(LoginPage());

@@ -86,14 +86,15 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
           'DivisionLocation': divisionController.text,
           'UnionVillageLocation': unionVillageController.text,
           'StreetHouseLocation': streetHouseController.text,
+          // 'isRetrieved':
         };
         DocumentReference docId = await collectionReference.add(lostItemData);
         documentKey.add(docId);
         final lostItem = await collectionReference.doc(docId.id).get().then(
               (value) => value.data() as Map<String, dynamic>,
             );
-        // print(lostItem['LostItem']);
-        // print(lostItem['Category']);
+        print(lostItem['LostItem']);
+        print(lostItem['Category']);
 
         showDialog(
           context: context,

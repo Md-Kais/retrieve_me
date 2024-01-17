@@ -10,17 +10,17 @@ import '../firebase_options.dart';
 
 GlobalKey<ScaffoldState> _sKey = GlobalKey();
 
-class LostItemListPage extends StatefulWidget {
-  const LostItemListPage({super.key});
+class FoundItemListPage extends StatefulWidget {
+  const FoundItemListPage({super.key});
 
   @override
-  State<LostItemListPage> createState() => _LostItemListPageState();
+  State<FoundItemListPage> createState() => _FoundItemListPageState();
 }
 
-class _LostItemListPageState extends State<LostItemListPage> {
-  Stream<QuerySnapshot> query =
-      FirebaseFirestore.instance.collection('LostProduct').snapshots();
+class _FoundItemListPageState extends State<FoundItemListPage> {
   int index = 0;
+  Stream<QuerySnapshot> query =
+      FirebaseFirestore.instance.collection('FoundProduct').snapshots();
   TextEditingController _searchController = TextEditingController();
   String _searchText = "";
 
@@ -32,11 +32,11 @@ class _LostItemListPageState extends State<LostItemListPage> {
         _searchText = _searchController.text;
         if (_searchText == "") {
           query =
-              FirebaseFirestore.instance.collection('LostProduct').snapshots();
+              FirebaseFirestore.instance.collection('FoundProduct').snapshots();
         } else {
           query = FirebaseFirestore.instance
-              .collection('LostProduct')
-              .where('LostItem', isEqualTo: _searchText)
+              .collection('FoundProduct')
+              .where('FoundItem', isEqualTo: _searchText)
               .snapshots();
           print('Query result is: $query');
         }
@@ -63,37 +63,36 @@ class _LostItemListPageState extends State<LostItemListPage> {
           ),
           builder: (context, snapshot) {
             return Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 45, 44, 46),
-                      Color.fromARGB(255, 5, 63, 111)
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    viewSearchBar(),
-                    queryLostItems(),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 45, 44, 46),
+                    Color.fromARGB(255, 5, 63, 111)
                   ],
-                ));
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Column(
+                children: [
+                  viewSearchBar(),
+                  queryFoundItems(),
+                ],
+              ),
+            );
           },
         ),
       ),
     );
   }
 
-  Widget queryLostItems() {
+  Widget queryFoundItems() {
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
         stream: query,
-        // FirebaseFirestore.instance.collection('LostProduct').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
-              shrinkWrap: true, // Add shrinkWrap: true to ListView.builder
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 DocumentSnapshot ds = snapshot.data!.docs[index];
@@ -103,7 +102,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
                       margin: const EdgeInsets.all(15.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 137, 181, 201),
+                        color: const Color.fromARGB(255, 137, 181, 201),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -133,7 +132,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                   ),
                                 ),
                                 Text(
-                                  ds['LostItem'],
+                                  ds['FoundItem'],
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12.0,
@@ -155,7 +154,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                   ),
                                 ),
                                 const Text(
-                                  'Date of Request',
+                                  'Date When Found',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.0,
@@ -171,7 +170,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                   ),
                                 ),
                                 const Text(
-                                  'Time of Request',
+                                  'Time When Found',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.0,
@@ -215,7 +214,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
       child: TextField(
         controller: _searchController,
         decoration: const InputDecoration(
-          labelText: 'Search Lost Item',
+          labelText: 'Search Found Item',
           prefixIcon: Icon(Icons.search),
         ),
       ),
