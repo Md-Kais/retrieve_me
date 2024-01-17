@@ -32,6 +32,7 @@ class PostLostItemPage extends StatefulWidget {
 }
 
 class _PostLostItemPageState extends State<PostLostItemPage> {
+  List<DocumentReference> documentKey = [];
   XFile? selectedImage;
   TextEditingController whatWasLost = TextEditingController();
   TextEditingController itemCategory = TextEditingController();
@@ -86,13 +87,20 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
           'UnionVillageLocation': unionVillageController.text,
           'StreetHouseLocation': streetHouseController.text,
         };
-        await collectionReference.add(lostItemData);
+        DocumentReference docId = await collectionReference.add(lostItemData);
+        documentKey.add(docId);
+        final lostItem = await collectionReference.doc(docId.id).get().then(
+              (value) => value.data() as Map<String, dynamic>,
+            );
+        // print(lostItem['LostItem']);
+        // print(lostItem['Category']);
 
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Lost Item Posted!', textAlign: TextAlign.center),
-            content: const Text('You have successfully created your Lost Item post!'),
+            content: const Text(
+                'You have successfully created your Lost Item post!'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -126,8 +134,8 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content:
-              const Text('Please fill all the required fields before submitting!'),
+          content: const Text(
+              'Please fill all the required fields before submitting!'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -149,11 +157,6 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
       child: Scaffold(
         drawer: const NavigationDrawerWidget(),
         key: _sKey,
-        // appBar: AppBar(
-        //   title: const Text('Post Lost Item'),
-        //   centerTitle: true,
-        //   backgroundColor: Colors.indigo,
-        // ),
         body: FutureBuilder(
           future: Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,

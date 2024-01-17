@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/drawer_item.dart';
 import 'package:retrieve_me/Components/drawer_items.dart';
+import 'package:retrieve_me/pages/lostItemList.dart';
 import 'package:retrieve_me/pages/postFoundItem.dart';
 import 'package:retrieve_me/pages/postLostItem.dart';
 
@@ -161,6 +162,9 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 'Post Found Item':
         navigateTo(const PostFoundItemPage());
+        break;
+      case 'Lost Item List':
+        navigateTo(const LostItemListPage());
         break;
       case 'Logout':
         navigateTo(LoginPage());
