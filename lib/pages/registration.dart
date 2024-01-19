@@ -1,17 +1,26 @@
 // import 'dart:js_util';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/my_textfield.dart';
+import 'package:retrieve_me/auth/auth_services.dart';
+import 'package:retrieve_me/db/db_helper.dart';
 import 'package:retrieve_me/pages/login.dart';
+import 'package:retrieve_me/pages/postLostItem.dart';
+import 'package:retrieve_me/provider/user_provider.dart';
 import '../firebase_options.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../model/UserModel.dart';
+
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
   RegistrationPageState createState() => RegistrationPageState();
@@ -19,62 +28,15 @@ class RegistrationPage extends StatefulWidget {
 
 class RegistrationPageState extends State<RegistrationPage> {
   // TextEditingController registrationController = TextEditingController();
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController contactNumberController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+ final TextEditingController lastNameController = TextEditingController();
+ final TextEditingController contactNumberController = TextEditingController();
+ final TextEditingController addressController = TextEditingController();
+ final TextEditingController emailController = TextEditingController();
+ final TextEditingController passwordController = TextEditingController();
 
   XFile? selectedImage;
 
-  Future<void> _submitRegistration() async {
-    if (_areAllFieldsFilled()) {
-      final firstName = firstNameController.text;
-      final lastName = lastNameController.text;
-      final contactNumber = contactNumberController.text;
-      final email = emailController.text;
-      final password = passwordController.text;
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Registered Sucessfully!'),
-          content: const Text('You have created a new account now!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Okay'),
-            ),
-          ],
-        ),
-      );
-      //route to new page
-      //   confirm registration and insert to database
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => ConfirmedRegistration()),
-      //   );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content:
-              const Text('Please fill all the required fields before submitting!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Okay'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
 
   void _insertImage() async {
     final selector = ImagePicker();
@@ -93,8 +55,8 @@ class RegistrationPageState extends State<RegistrationPage> {
         contactNumberController.text.isNotEmpty &&
         addressController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty &&
-        selectedImage != null;
+        passwordController.text.isNotEmpty;
+    //  && selectedImage != null;
   }
 
   void _resetFields() {
@@ -308,4 +270,98 @@ class RegistrationPageState extends State<RegistrationPage> {
       },
     ));
   }
+  void _submitRegistration() async {
+    if (_areAllFieldsFilled()) {
+      EasyLoading.show(status: 'File is uploading', dismissOnTap: false);
+      final firstName = firstNameController.text;
+      final lastName = lastNameController.text;
+      final contactNumber = contactNumberController.text;
+      final address = addressController.text;
+      final email = emailController.text;
+      final password = passwordController.text;
+      try {
+        User user;
+
+        user = await AuthService.registerUser(email, password,contactNumber);
+        // String uid = user.uid;
+        // UserModel? userModel;
+        Future<void> addUser(User user) async{
+          try {
+            final userModel = UserModel(
+              userId: user.uid,
+              email: user.email!,
+              firstName : firstName,
+              userCreationTime: Timestamp.fromDate(DateTime.now()),
+              address: address,
+              profession: 'Student',
+              contactNo: contactNumber,
+
+            );
+            await db_helper.addUser(userModel);
+
+          }
+          catch(error){
+            print('Error adding user to Firestore: $error');
+            // Handle error accordingly
+          }
+        }
+        addUser(user);
+        //
+        // await Provider.of<UserProvider>(
+        //
+        //
+        //     context, listen: false).addUser(user);
+
+        EasyLoading.dismiss();
+        Navigator.pushReplacement(
+
+
+            context,
+            MaterialPageRoute(
+              builder: (context) => const PostLostItemPage(),
+            ));
+        // await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      } on FirebaseAuthException catch (error) {}
+      //   email: email,
+      //   password: password,
+      // );
+      showDialog(
+
+
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Registered Sucessfully!'),
+          content: const Text('You have created a new account now!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+      //route to new page
+      //   confirm registration and insert to database
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => ConfirmedRegistration()),
+      //   );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text(
+              'Please fill all the required fields before submitting!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
 }

@@ -1,15 +1,36 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:retrieve_me/pages/login.dart';
+import 'package:retrieve_me/provider/user_provider.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-    title: 'Retrieve-Me',
-    theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-      useMaterial3: true,
-    ),
-    // home: const RegistrationPage(),
-    home: LoginPage(),
-  ));
+  await Firebase.initializeApp();
+  runApp(MultiProvider(
+      providers: [
+
+       ChangeNotifierProvider(create: (context) => UserProvider(),),
+      ],
+      child: const MyApp()));
+}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      builder: EasyLoading.init(),
+      debugShowCheckedModeBanner: false,
+      title: 'Retrieve-Me',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        useMaterial3: true,
+      ),
+      // home: const RegistrationPage(),
+      home: LoginPage(),
+    );
+
+  }
 }
