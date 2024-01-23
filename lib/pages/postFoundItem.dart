@@ -252,41 +252,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
                                       MediaQuery.of(context).size.width * 0.75,
                                   child: Align(
                                     alignment: Alignment.center,
-                                    child: DateTimePicker(
-                                      // timeFieldWidth: MediaQuery.of(context).size.width * 0.35,
-                                      type: DateTimePickerType.dateTimeSeparate,
-                                      dateMask: 'd MMM, yyyy',
-                                      initialValue: DateTime.now().toString(),
-                                      firstDate: DateTime(2000),
-                                      lastDate: DateTime(2099),
-                                      icon: const Icon(Icons.date_range_sharp),
-                                      dateLabelText: 'Date',
-                                      style: const TextStyle(
-                                        color: Colors.deepOrangeAccent,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      timeLabelText: "Hour",
-                                      selectableDayPredicate: (date) {
-                                        return true;
-                                      },
-                                      onChanged: (value) => {
-                                        dateTimeController =
-                                            DateTime.parse(value),
-                                        // dateTimeController = value as DateTimePicker,
-                                      },
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color.fromARGB(255, 156, 178,
-                                                197), // Border color
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                15.0), // Border radius
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    child: dateTimePicker(),
                                   )),
 
                               const SizedBox(height: 16),
@@ -394,33 +360,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
                                 backgroundColor: Colors.greenAccent,
                               )),
                               const SizedBox(height: 32),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(width: 16),
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.05,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.250,
-                                    child: ElevatedButton(
-                                      onPressed: submitFoundItem,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        // splashFactory: InkRipple.splashFactory,
-                                      ),
-                                      child: const Text(
-                                        'Submit',
-                                        style: TextStyle(
-                                          color: Colors.deepPurple,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: Checkbox.width * 0.90,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              submitButton(context),
                             ]),
                           ],
                         ),
@@ -431,6 +371,69 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
                 );
               }
             }),
+      ),
+    );
+  }
+
+  Row submitButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(width: 16),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.05,
+          width: MediaQuery.of(context).size.width * 0.350,
+          child: ElevatedButton(
+            onPressed: submitFoundItem,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              // splashFactory: InkRipple.splashFactory,
+            ),
+            child: const Text(
+              'Submit',
+              style: TextStyle(
+                color: Colors.deepPurple,
+                fontWeight: FontWeight.bold,
+                fontSize: Checkbox.width * 0.90,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  DateTimePicker dateTimePicker() {
+    return DateTimePicker(
+      // timeFieldWidth: MediaQuery.of(context).size.width * 0.35,
+      type: DateTimePickerType.dateTimeSeparate,
+      dateMask: 'd MMM, yyyy',
+      initialValue: DateTime.now().toString(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2099),
+      icon: const Icon(Icons.date_range_sharp),
+      dateLabelText: 'Date',
+      style: const TextStyle(
+        color: Colors.deepOrangeAccent,
+        fontWeight: FontWeight.bold,
+      ),
+      timeLabelText: "Hour",
+      selectableDayPredicate: (date) {
+        return true;
+      },
+      onChanged: (value) => {
+        dateTimeController = DateTime.parse(value),
+        // dateTimeController = value as DateTimePicker,
+      },
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color.fromARGB(255, 156, 178, 197), // Border color
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0), // Border radius
+          ),
+        ),
       ),
     );
   }

@@ -133,12 +133,6 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
             ],
           ),
         );
-
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => LoginPage(),
-        //   ),
-        // );
       } catch (e) {
         showDialog(
           context: context,
@@ -425,33 +419,7 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
                                   backgroundColor: Colors.greenAccent,
                                 )),
                             const SizedBox(height: 32),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(width: 16),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.250,
-                                  child: ElevatedButton(
-                                    onPressed: submitLostItem,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      // splashFactory: InkRipple.splashFactory,
-                                    ),
-                                    child: const Text(
-                                      'Submit',
-                                      style: TextStyle(
-                                        color: Colors.deepPurple,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: Checkbox.width * 0.90,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            submitButton(context),
                           ]),
                         ],
                       ),
@@ -464,6 +432,34 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
           },
         ),
       ),
+    );
+  }
+
+  Row submitButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(width: 16),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.05,
+          width: MediaQuery.of(context).size.width * 0.350,
+          child: ElevatedButton(
+            onPressed: submitLostItem,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              // splashFactory: InkRipple.splashFactory,
+            ),
+            child: const Text(
+              'Submit',
+              style: TextStyle(
+                color: Colors.deepPurple,
+                fontWeight: FontWeight.bold,
+                fontSize: Checkbox.width * 0.90,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
