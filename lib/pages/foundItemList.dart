@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/navigation_drawer_widget.dart';
 import 'package:retrieve_me/provider/navigation_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 
 import '../firebase_options.dart';
 
@@ -115,14 +116,18 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                         children: [
                           Column(
                             children: [
-                              Image.network(
-                                (ds.data() as Map<String, dynamic>?)!
-                                        .containsKey('ImageURL')
-                                    ? ds['ImageURL']
-                                    : placeholder,
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.4,
+                              WidgetZoom(
+                                heroAnimationTag: 'tag',
+                                zoomWidget: Image.network(
+                                  (ds.data() as Map<String, dynamic>?)!
+                                          .containsKey('ImageURL')
+                                      ? ds['ImageURL']
+                                      : placeholder,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.4,
+                                ),
                               ),
                             ],
                           ),

@@ -93,6 +93,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
           'DivisionLocation': divisionController.text,
           'UnionVillageLocation': unionVillageController.text,
           'StreetHouseLocation': streetHouseController.text,
+          'ImageURL': imgURL,
         };
         await collectionReference.add(foundItemData);
 
