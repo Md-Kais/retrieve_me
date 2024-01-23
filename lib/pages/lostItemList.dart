@@ -23,6 +23,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
   int index = 0;
   TextEditingController _searchController = TextEditingController();
   String _searchText = "";
+  String placeholder = 'https://placehold.co/600x400/000000/FFFFFF/png';
 
   @override
   void initState() {
@@ -116,7 +117,10 @@ class _LostItemListPageState extends State<LostItemListPage> {
                           Column(
                             children: [
                               Image.network(
-                                'https://placehold.co/600x400/000000/FFFFFF/png',
+                                (ds.data() as Map<String, dynamic>?)!
+                                        .containsKey('ImageURL')
+                                    ? ds['ImageURL']
+                                    : placeholder,
                                 width: MediaQuery.of(context).size.width * 0.4,
                                 height:
                                     MediaQuery.of(context).size.height * 0.4,
