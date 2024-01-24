@@ -10,7 +10,8 @@ class MyTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters; // Added inputFormatters
   final TextInputType? keyboardType; // Made keyboardType optional
 
-  const MyTextField({super.key, 
+  const MyTextField({
+    super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
@@ -33,7 +34,8 @@ class MyTextField extends StatelessWidget {
         style: const TextStyle(color: Color.fromRGBO(150, 255, 210, 75)),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(color: Color.fromARGB(255, 223, 206, 206)),
+          labelStyle:
+              const TextStyle(color: Color.fromARGB(255, 223, 206, 206)),
           prefixIcon: Icon(prefixIcon),
           prefixIconColor: const Color.fromRGBO(255, 255, 255, 100),
           border: const OutlineInputBorder(
