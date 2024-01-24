@@ -39,14 +39,19 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.7.2
   cloud_firestore: ^4.8.4
+  flutter_easyloading:
+  firebase_storage:
   firebase_analytics: ^10.4.4
   image_picker: ^0.8.4
+  cached_network_image:
   google_fonts: ^5.1.0
   js: ^0.6.2
   collapsible_sidebar: ^2.0.7
   provider: ^5.0.0
-  firebase_storage: ^11.6.0
   widget_zoom: ^0.0.3
+  freezed_annotation:
+  json_annotation:
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +63,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  freezed:
+  json_serializable:
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
