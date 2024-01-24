@@ -11,6 +11,7 @@ import 'package:retrieve_me/Components/my_textfield.dart';
 import 'package:retrieve_me/Components/square_tile.dart';
 import 'package:retrieve_me/firebase_options.dart';
 import 'package:retrieve_me/pages/postLostItem.dart';
+import 'package:retrieve_me/pages/profilePage.dart';
 import 'package:retrieve_me/pages/registration.dart';
 import 'package:retrieve_me/provider/navigation_provider.dart';
 
@@ -259,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
         EasyLoading.dismiss();
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const PostLostItemPage(),
+            builder: (context) => ProfilePage(),
           ),
         );
             } on FirebaseAuthException catch (error) {

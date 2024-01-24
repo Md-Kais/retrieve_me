@@ -1,5 +1,5 @@
 // import 'dart:js_util';
-
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,14 +29,14 @@ class RegistrationPage extends StatefulWidget {
 class RegistrationPageState extends State<RegistrationPage> {
   // TextEditingController registrationController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
- final TextEditingController lastNameController = TextEditingController();
- final TextEditingController contactNumberController = TextEditingController();
- final TextEditingController addressController = TextEditingController();
- final TextEditingController emailController = TextEditingController();
- final TextEditingController passwordController = TextEditingController();
-
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController contactNumberController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController professionController = TextEditingController();
+  String? imageLocalPath;
   XFile? selectedImage;
-
 
   void _insertImage() async {
     final selector = ImagePicker();
@@ -53,21 +53,35 @@ class RegistrationPageState extends State<RegistrationPage> {
     return firstNameController.text.isNotEmpty &&
         lastNameController.text.isNotEmpty &&
         contactNumberController.text.isNotEmpty &&
+        professionController.text.isNotEmpty &&
         addressController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty;
-    //  && selectedImage != null;
+        passwordController.text.isNotEmpty &&
+        imageLocalPath != null;
   }
 
   void _resetFields() {
     firstNameController.clear();
     lastNameController.clear();
     contactNumberController.clear();
+    professionController.clear();
     addressController.clear();
     emailController.clear();
     passwordController.clear();
+    imageLocalPath = null;
   }
 
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    contactNumberController.dispose();
+    professionController.dispose();
+    addressController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +107,7 @@ class RegistrationPageState extends State<RegistrationPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: DrawerHeader(
@@ -109,6 +124,44 @@ class RegistrationPageState extends State<RegistrationPage> {
                             ),
                           ),
                         ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+
+                      child: Column(
+                        children: [
+                          imageLocalPath == null
+                              ? const Icon(
+                            Icons.photo,
+                            size: 100,
+                          )
+                              : Image.file(
+                            File(imageLocalPath!),
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton.icon(
+                                onPressed: () {
+                                  getImage(ImageSource.camera);
+                                },
+                                icon: const Icon(Icons.camera),
+                                label: const Text('Capture'),
+                              ),
+                              TextButton.icon(
+                                onPressed: () {
+                                  getImage(ImageSource.gallery);
+                                },
+                                icon: const Icon(Icons.photo_album),
+                                label: const Text('Gallery'),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -159,6 +212,16 @@ class RegistrationPageState extends State<RegistrationPage> {
                     ),
                     const SizedBox(height: 16),
                     MyTextField(
+                      controller: professionController,
+                      hintText:
+                      'Zero Point, Chittagong University Road, New Mooring Chittagong',
+                      obscureText: false,
+                      prefixIcon: Icons.work,
+                      labelText: 'profession',
+                      keyboardType: TextInputType.text,
+                    ),
+                    const SizedBox(height: 16),
+                    MyTextField(
                       controller: emailController,
                       hintText: 'johnKais@email.com',
                       obscureText: false,
@@ -175,24 +238,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                       labelText: 'Password',
                       keyboardType: TextInputType.text,
                     ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      height: MediaQuery.of(context).size.height * 0.075,
-                      child: TextButton(
-                        onPressed: _insertImage,
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.cyan,
-                          shadowColor: Colors.green,
-                        ),
-                        child: const Text('Insert Profile Image',
-                            style: TextStyle(
-                              color: Colors.brown,
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ),
-                    ),
-                    const SizedBox(height: 36),
+
+
+                    const SizedBox(height:26),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -270,52 +318,62 @@ class RegistrationPageState extends State<RegistrationPage> {
       },
     ));
   }
+  void getImage(ImageSource source) async {
+    final file =
+    await ImagePicker().pickImage(source: source, imageQuality: 50);
+    if (file != null) {
+      setState(() {
+        imageLocalPath = file.path;
+      });
+    }
+  }
+
   void _submitRegistration() async {
     if (_areAllFieldsFilled()) {
       EasyLoading.show(status: 'File is uploading', dismissOnTap: false);
       final firstName = firstNameController.text;
       final lastName = lastNameController.text;
+      final profession = professionController.text;
       final contactNumber = contactNumberController.text;
       final address = addressController.text;
       final email = emailController.text;
+
       final password = passwordController.text;
       try {
         User user;
 
-        user = await AuthService.registerUser(email, password,contactNumber);
+        user = await AuthService.registerUser(email, password, contactNumber);
         // String uid = user.uid;
         // UserModel? userModel;
-        Future<void> addUser(User user) async{
+        Future<void> addUser(User user) async {
           try {
+            final imageModel =
+            await Provider.of<UserProvider>(context, listen: false)
+                .uploadImage(imageLocalPath!);
             final userModel = UserModel(
               userId: user.uid,
               email: user.email!,
-              firstName : firstName,
+              firstName: firstName,
+              lastName: lastName,
               userCreationTime: Timestamp.fromDate(DateTime.now()),
               address: address,
-              profession: 'Student',
+              profession: profession,
+              rating: 0,
               contactNo: contactNumber,
-
+              thumbnailImage: imageModel,
             );
             await db_helper.addUser(userModel);
-
-          }
-          catch(error){
+          } catch (error) {
             print('Error adding user to Firestore: $error');
             // Handle error accordingly
           }
         }
+
         addUser(user);
-        //
-        // await Provider.of<UserProvider>(
-        //
-        //
-        //     context, listen: false).addUser(user);
+
 
         EasyLoading.dismiss();
         Navigator.pushReplacement(
-
-
             context,
             MaterialPageRoute(
               builder: (context) => const PostLostItemPage(),
@@ -326,8 +384,6 @@ class RegistrationPageState extends State<RegistrationPage> {
       //   password: password,
       // );
       showDialog(
-
-
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Registered Sucessfully!'),
@@ -363,5 +419,4 @@ class RegistrationPageState extends State<RegistrationPage> {
       );
     }
   }
-
 }

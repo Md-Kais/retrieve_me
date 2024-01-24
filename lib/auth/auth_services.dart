@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:retrieve_me/db/db_helper.dart';
 
@@ -18,6 +19,8 @@ class AuthService{
     final credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     return credential.user!;
   }
+
+
 
   static Future<void> logout(){
     return _auth.signOut();

@@ -24,9 +24,12 @@ class NavigationDrawerWidget extends StatelessWidget {
     return SizedBox(
       width: isCollapsed ? MediaQuery.of(context).size.width * 0.15 : null,
       child: Drawer(
+
         child: Container(
             color: const Color(0xFF1a2f45),
-            child: Column(
+            child: ListView(
+              physics: ClampingScrollPhysics(),
+
               children: [
                 Container(
                   padding:
@@ -63,6 +66,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               ],
             )),
       ),
+
     );
   }
 

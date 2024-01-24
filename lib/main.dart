@@ -2,7 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:retrieve_me/pages/leaderBoardPage.dart';
 import 'package:retrieve_me/pages/login.dart';
+import 'package:retrieve_me/pages/profilePage.dart';
+import 'package:retrieve_me/pages/userPage.dart';
 import 'package:retrieve_me/provider/user_provider.dart';
 
 Future<void> main() async {
@@ -29,7 +32,13 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const RegistrationPage(),
-      home: LoginPage(),
+     // home: LoginPage(),
+      initialRoute: LoginPage.routeName,
+      routes:{
+        LoginPage.routeName: (_) => const LoginPage(),
+        UserPage.routeName: (_) => const UserPage(),
+        LeaderBoardPage.routeName: (_) => const LeaderBoardPage(),
+      }
     );
 
   }
