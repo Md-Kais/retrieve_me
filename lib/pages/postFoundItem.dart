@@ -31,6 +31,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
   TextEditingController additionalInfo = TextEditingController();
   TextEditingController itemLocationController = TextEditingController();
   String userID = AuthService.currentUser!.uid;
+  String loserID = '';
   bool isRetrieved = false;
   DateTime? dateTimeController = DateTime.now();
   late String imgURL;
@@ -88,8 +89,9 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
           'Description': additionalInfo.text,
           'ItemLocation': itemLocationController.text,
           'ImageURL': imgURL,
-          'userID': userID,
-          'isRetrieved': isRetrieved,
+          'UserID': userID,
+          'LoserID': loserID,
+          'IsRetrieved': isRetrieved,
         };
         await collectionReference.add(foundItemData);
 

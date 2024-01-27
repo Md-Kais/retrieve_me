@@ -44,6 +44,7 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
   TextEditingController itemLocationController = TextEditingController();
   DateTime? dateTimeController = DateTime.now();
   String userID = AuthService.currentUser!.uid;
+  String founderID = '';
   bool isRetrieved = false;
   late String imgURL;
 
@@ -103,8 +104,9 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
           'Description': additionalInfo.text,
           'ItemLocation': itemLocationController.text,
           'ImageURL': imgURL,
-          'userID': userID,
-          'isRetrieved': isRetrieved,
+          'FounderID': founderID,
+          'UserID': userID,
+          'IsRetrieved': isRetrieved,
         };
         DocumentReference docId = await collectionReference.add(lostItemData);
 
