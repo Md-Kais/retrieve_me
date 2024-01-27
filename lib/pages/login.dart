@@ -152,7 +152,6 @@ class _LoginPageState extends State<LoginPage> {
                               child: Text("Log In"),
                             ),
 
-
                             const SizedBox(height: 50), // Removed 'const'
 
                             // or continue with
@@ -258,12 +257,13 @@ class _LoginPageState extends State<LoginPage> {
       try {
         final User user = await AuthService.loginAdmin(email, password);
         EasyLoading.dismiss();
+        // ignore: use_build_context_synchronously
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProfilePage(),
           ),
         );
-            } on FirebaseAuthException catch (error) {
+      } on FirebaseAuthException catch (error) {
         EasyLoading.dismiss();
         setState(() {
           _errMsg = error.message!;

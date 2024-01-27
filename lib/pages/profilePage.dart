@@ -24,9 +24,10 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 User? get currentUser => _auth.currentUser;
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProfilePageState createState() => _ProfilePageState();
 }
 
@@ -38,7 +39,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-
     getUserInfo();
   }
 
@@ -55,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
     db_helper.getUserInfo(AuthService.currentUser!.uid).listen((snapshot) {
       if (snapshot.exists) {
         setState(() {
-          userModel = UserModel.fromMap(snapshot.data()!);
+          userModel = UserModel?.fromMap(snapshot.data()!);
         });
       }
     });
@@ -148,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '${userModel.firstName} ${userModel.lastName}',
+                                          '${userModel?.firstName} ${userModel?.lastName}',
                                           style: GoogleFonts.oswald(
                                             textStyle: const TextStyle(
                                               fontSize: 32,
@@ -209,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   print('Statistics Card Tapped');
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     gradient: const LinearGradient(
                                       colors: [Colors.cyan, Colors.indigo],
@@ -220,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       _buildStatColumn('Lost Items', '10'),
-                                      const SizedBox(width: 20),
+                                      const SizedBox(width: 18),
                                       _buildStatColumn('Found Items', '20'),
                                     ],
                                   ),
@@ -308,13 +308,13 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Text(
           title,
-          style: const TextStyle(fontSize: 36, color: Colors.white),
+          style: const TextStyle(fontSize: 24, color: Colors.white),
         ),
         const SizedBox(height: 5),
         Text(
           number,
           style: const TextStyle(
-            fontSize: 36,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),

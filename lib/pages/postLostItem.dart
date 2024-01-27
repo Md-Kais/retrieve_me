@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:retrieve_me/auth/auth_services.dart';
 import 'package:retrieve_me/pages/login.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -41,11 +42,9 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
   TextEditingController itemCategory = TextEditingController();
   TextEditingController additionalInfo = TextEditingController();
   TextEditingController itemLocationController = TextEditingController();
-  // TextEditingController cityController = TextEditingController();
-  // TextEditingController divisionController = TextEditingController();
-  // TextEditingController unionVillageController = TextEditingController();
-  // TextEditingController streetHouseController = TextEditingController();
   DateTime? dateTimeController = DateTime.now();
+  String userID = AuthService.currentUser!.uid;
+  bool isRetrieved = false;
   late String imgURL;
 
   void _insertImage() async {
@@ -82,10 +81,6 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
         itemCategory.text.isNotEmpty &&
         additionalInfo.text.isNotEmpty &&
         itemLocationController.text.isNotEmpty &&
-        // cityController.text.isNotEmpty &&
-        // divisionController.text.isNotEmpty &&
-        // unionVillageController.text.isNotEmpty &&
-        // streetHouseController.text.isNotEmpty &&
         selectedImage != null &&
         dateTimeController != null;
   }
@@ -107,11 +102,9 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
           'DateTime': dateTimeTimestamp,
           'Description': additionalInfo.text,
           'ItemLocation': itemLocationController.text,
-          // 'CityLocation': cityController.text,
-          // 'DivisionLocation': divisionController.text,
-          // 'UnionVillageLocation': unionVillageController.text,
-          // 'StreetHouseLocation': streetHouseController.text,
           'ImageURL': imgURL,
+          'userID': userID,
+          'isRetrieved': isRetrieved,
         };
         DocumentReference docId = await collectionReference.add(lostItemData);
 
