@@ -20,7 +20,7 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  late UserModel userModel;
+  UserModel? userModel;
 
   @override
   void didChangeDependencies() {
@@ -40,7 +40,7 @@ class _UserPageState extends State<UserPage> {
               ),
               title: SafeArea(
                 child: Text(
-                  "${userModel.firstName} ${userModel.lastName}",
+                  "${userModel?.firstName} ${userModel?.lastName}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ class _UserPageState extends State<UserPage> {
                                       radius: 70,
                                       backgroundColor: Colors.transparent,
                                       child: CachedNetworkImage(
-                                        imageUrl: userModel
+                                        imageUrl: userModel!
                                             .thumbnailImage.downloadUrl,
                                         imageBuilder:
                                             (context, imageProvider) =>
@@ -125,15 +125,16 @@ class _UserPageState extends State<UserPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     _buildText(
-                                        'Name: ${userModel.firstName} ${userModel.lastName}',
+                                        'Name: ${userModel!.firstName} ${userModel!.lastName}',
                                         isHeader: true),
-                                    _buildText('Email: ${userModel.email}'),
+                                    _buildText('Email: ${userModel!.email}'),
                                     _buildText(
-                                        'Profession: ${userModel.profession}'),
-                                    _buildText('Points: ${userModel.rating}'),
-                                    _buildText('Address: ${userModel.address}'),
+                                        'Profession: ${userModel!.profession}'),
+                                    _buildText('Points: ${userModel!.rating}'),
+                                    _buildText(
+                                        'Address: ${userModel!.address}'),
                                     _buildText('Creation Time: '
-                                        '${_formatTimestamp(userModel.userCreationTime)}'),
+                                        '${_formatTimestamp(userModel!.userCreationTime)}'),
                                   ],
                                 ),
                               ),
