@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+import 'package:retrieve_me/Components/my_button.dart';
 import 'package:retrieve_me/Components/navigation_drawer_widget.dart';
+import 'package:retrieve_me/pages/mapscreen.dart';
 import 'package:retrieve_me/provider/navigation_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:widget_zoom/widget_zoom.dart';
@@ -199,6 +202,70 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                     fontSize: 12.0,
                                   ),
                                 ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.05,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.350,
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => MapScreen(
+                                                address: ds['ItemLocation']),
+                                          ));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 149, 202, 223),
+                                      // splashFactory: InkRipple.splashFactory,
+                                    ),
+                                    child: const Text(
+                                      'Location',
+                                      style: TextStyle(
+                                        color: Colors.deepPurple,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Checkbox.width * 0.70,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.05,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.350,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //       builder: (context) => MapScreen(
+                                      //           address: ds['CityLocation']),
+                                      //     ));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 149, 202, 223),
+                                      // splashFactory: InkRipple.splashFactory,
+                                    ),
+                                    child: const Text(
+                                      'Assert a Claim',
+                                      style: TextStyle(
+                                        color: Colors.deepPurple,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Checkbox.width * 0.70,
+                                      ),
+                                    ),
+                                  ),
+                                )
                               ]),
                         ],
                       )),

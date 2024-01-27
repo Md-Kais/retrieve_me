@@ -7,6 +7,7 @@ import 'package:retrieve_me/pages/foundItemList.dart';
 import 'package:retrieve_me/pages/lostItemList.dart';
 import 'package:retrieve_me/pages/postFoundItem.dart';
 import 'package:retrieve_me/pages/postLostItem.dart';
+import 'package:retrieve_me/pages/profilePage.dart';
 
 import '../pages/login.dart';
 import '../provider/navigation_provider.dart';
@@ -25,12 +26,10 @@ class NavigationDrawerWidget extends StatelessWidget {
     return SizedBox(
       width: isCollapsed ? MediaQuery.of(context).size.width * 0.15 : null,
       child: Drawer(
-
         child: Container(
             color: const Color(0xFF1a2f45),
             child: ListView(
               physics: ClampingScrollPhysics(),
-
               children: [
                 Container(
                   padding:
@@ -67,7 +66,6 @@ class NavigationDrawerWidget extends StatelessWidget {
               ],
             )),
       ),
-
     );
   }
 
@@ -173,6 +171,9 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 'Found Item List':
         navigateTo(const FoundItemListPage());
+        break;
+      case 'User Dashboard':
+        navigateTo(ProfilePage());
         break;
       case 'Logout':
         navigateTo(LoginPage());

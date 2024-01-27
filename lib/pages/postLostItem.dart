@@ -40,10 +40,11 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
   TextEditingController whatWasLost = TextEditingController();
   TextEditingController itemCategory = TextEditingController();
   TextEditingController additionalInfo = TextEditingController();
-  TextEditingController cityController = TextEditingController();
-  TextEditingController divisionController = TextEditingController();
-  TextEditingController unionVillageController = TextEditingController();
-  TextEditingController streetHouseController = TextEditingController();
+  TextEditingController itemLocationController = TextEditingController();
+  // TextEditingController cityController = TextEditingController();
+  // TextEditingController divisionController = TextEditingController();
+  // TextEditingController unionVillageController = TextEditingController();
+  // TextEditingController streetHouseController = TextEditingController();
   DateTime? dateTimeController = DateTime.now();
   late String imgURL;
 
@@ -80,10 +81,11 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
     return whatWasLost.text.isNotEmpty &&
         itemCategory.text.isNotEmpty &&
         additionalInfo.text.isNotEmpty &&
-        cityController.text.isNotEmpty &&
-        divisionController.text.isNotEmpty &&
-        unionVillageController.text.isNotEmpty &&
-        streetHouseController.text.isNotEmpty &&
+        itemLocationController.text.isNotEmpty &&
+        // cityController.text.isNotEmpty &&
+        // divisionController.text.isNotEmpty &&
+        // unionVillageController.text.isNotEmpty &&
+        // streetHouseController.text.isNotEmpty &&
         selectedImage != null &&
         dateTimeController != null;
   }
@@ -104,10 +106,11 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
           'Category': itemCategory.text,
           'DateTime': dateTimeTimestamp,
           'Description': additionalInfo.text,
-          'CityLocation': cityController.text,
-          'DivisionLocation': divisionController.text,
-          'UnionVillageLocation': unionVillageController.text,
-          'StreetHouseLocation': streetHouseController.text,
+          'ItemLocation': itemLocationController.text,
+          // 'CityLocation': cityController.text,
+          // 'DivisionLocation': divisionController.text,
+          // 'UnionVillageLocation': unionVillageController.text,
+          // 'StreetHouseLocation': streetHouseController.text,
           'ImageURL': imgURL,
         };
         DocumentReference docId = await collectionReference.add(lostItemData);
@@ -323,75 +326,87 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
                               keyboardType: TextInputType.emailAddress,
                             ),
                             const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                // City
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.25,
-                                  child: MyTextField(
-                                    controller: divisionController,
-                                    hintText: 'Chittagong',
-                                    obscureText: false,
-                                    prefixIcon: Icons.location_city,
-                                    labelText: 'Division',
-                                    keyboardType: TextInputType.streetAddress,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                          RegExp(r'[a-zA-Z. ]'))
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.25,
-                                  child: MyTextField(
-                                    controller: cityController,
-                                    hintText: 'Hathazari',
-                                    obscureText: false,
-                                    prefixIcon: Icons.location_city,
-                                    labelText: 'City',
-                                    keyboardType: TextInputType.streetAddress,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                          RegExp(r'[a-zA-Z. ]'))
-                                    ],
-                                  ),
-                                )
-                              ],
+                            MyTextField(
+                              controller: itemLocationController,
+                              hintText: 'Chittagong University Museum',
+                              obscureText: false,
+                              prefixIcon: Icons.location_city,
+                              labelText: 'Location of item lost',
+                              keyboardType: TextInputType.streetAddress,
+                              // inputFormatters: [
+                              //   FilteringTextInputFormatter.allow(
+                              //       RegExp(r'[a-zA-Z. ]'))
+                              // ],
                             ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                // City
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.25,
-                                  child: MyTextField(
-                                    controller: streetHouseController,
-                                    hintText: 'Road no: 3, House no: 7',
-                                    obscureText: false,
-                                    prefixIcon: Icons.location_city,
-                                    labelText: 'Street/House No.',
-                                    keyboardType: TextInputType.streetAddress,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.25,
-                                  child: MyTextField(
-                                    controller: unionVillageController,
-                                    hintText: 'Fatikchhari',
-                                    obscureText: false,
-                                    prefixIcon: Icons.location_city,
-                                    labelText: 'Union/Village',
-                                    keyboardType: TextInputType.streetAddress,
-                                  ),
-                                )
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            //   children: [
+                            //     // City
+                            //     SizedBox(
+                            //       width:
+                            //           MediaQuery.of(context).size.width * 0.25,
+                            //       child: MyTextField(
+                            //         controller: divisionController,
+                            //         hintText: 'Chittagong',
+                            //         obscureText: false,
+                            //         prefixIcon: Icons.location_city,
+                            //         labelText: 'Division',
+                            //         keyboardType: TextInputType.streetAddress,
+                            //         inputFormatters: [
+                            //           FilteringTextInputFormatter.allow(
+                            //               RegExp(r'[a-zA-Z. ]'))
+                            //         ],
+                            //       ),
+                            //     ),
+                            //     SizedBox(
+                            //       width:
+                            //           MediaQuery.of(context).size.width * 0.25,
+                            //       child: MyTextField(
+                            //         controller: cityController,
+                            //         hintText: 'Hathazari',
+                            //         obscureText: false,
+                            //         prefixIcon: Icons.location_city,
+                            //         labelText: 'City',
+                            //         keyboardType: TextInputType.streetAddress,
+                            //         inputFormatters: [
+                            //           FilteringTextInputFormatter.allow(
+                            //               RegExp(r'[a-zA-Z. ]'))
+                            //         ],
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
+                            // const SizedBox(height: 16),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            //   children: [
+                            //     // City
+                            //     SizedBox(
+                            //       width:
+                            //           MediaQuery.of(context).size.width * 0.25,
+                            //       child: MyTextField(
+                            //         controller: streetHouseController,
+                            //         hintText: 'Road no: 3, House no: 7',
+                            //         obscureText: false,
+                            //         prefixIcon: Icons.location_city,
+                            //         labelText: 'Street/House No.',
+                            //         keyboardType: TextInputType.streetAddress,
+                            //       ),
+                            //     ),
+                            //     SizedBox(
+                            //       width:
+                            //           MediaQuery.of(context).size.width * 0.25,
+                            //       child: MyTextField(
+                            //         controller: unionVillageController,
+                            //         hintText: 'Fatikchhari',
+                            //         obscureText: false,
+                            //         prefixIcon: Icons.location_city,
+                            //         labelText: 'Union/Village',
+                            //         keyboardType: TextInputType.streetAddress,
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
                             const SizedBox(height: 16),
                             MyTextField(
                               controller: additionalInfo,

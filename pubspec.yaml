@@ -52,6 +52,9 @@ dependencies:
   freezed_annotation:
   json_annotation:
   intl: ^0.17.0
+  geocoding: ^2.0.0
+  flutter_map: ^6.1.0
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:

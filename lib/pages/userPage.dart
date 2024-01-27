@@ -94,8 +94,11 @@ class _UserPageState extends State<UserPage> {
                                       radius: 70,
                                       backgroundColor: Colors.transparent,
                                       child: CachedNetworkImage(
-                                        imageUrl: userModel.thumbnailImage.downloadUrl,
-                                        imageBuilder: (context, imageProvider) => Container(
+                                        imageUrl: userModel
+                                            .thumbnailImage.downloadUrl,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
@@ -105,8 +108,11 @@ class _UserPageState extends State<UserPage> {
                                           ),
                                         ),
                                         placeholder: (context, url) =>
-                                        const Center(child: CircularProgressIndicator()),
-                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                            const Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
                                       ),
                                     ),
                                     const SizedBox(height: 10),
@@ -118,106 +124,108 @@ class _UserPageState extends State<UserPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-
                                     _buildText(
-                                        'Name: ${userModel.firstName} ${userModel.lastName}', isHeader: true),
+                                        'Name: ${userModel.firstName} ${userModel.lastName}',
+                                        isHeader: true),
                                     _buildText('Email: ${userModel.email}'),
-                                    _buildText('Profession: ${userModel.profession}'),
+                                    _buildText(
+                                        'Profession: ${userModel.profession}'),
                                     _buildText('Points: ${userModel.rating}'),
                                     _buildText('Address: ${userModel.address}'),
                                     _buildText('Creation Time: '
-                                        '${_formatTimestamp(userModel
-                                        .userCreationTime)}'),
+                                        '${_formatTimestamp(userModel.userCreationTime)}'),
                                   ],
                                 ),
                               ),
                               const SizedBox(height: 20),
                               GestureDetector(
-                                onTap: () {
-                                  // Navigate to the leaderboard page here
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                      const LeaderBoardPage(), // Replace with the actual page
-                                    ),
-                                  );
-                                },
-                                child: Center(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(color: Colors.grey),
-                                    ),
-                                    padding: const EdgeInsets.all(16),
-                                    child: Card(
-                                      elevation: 5,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        side: const BorderSide(color: Colors.grey),
+                                  onTap: () {
+                                    // Navigate to the leaderboard page here
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LeaderBoardPage(), // Replace with the actual page
                                       ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          // Navigate to the leaderboard page or add your onTap logic here
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                              const LeaderBoardPage(), // Replace with the actual page
-                                            ),
-                                          );
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(16),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '⬅️ LEADERBOARD',
-                                                style: GoogleFonts.oswald(
-                                                  textStyle: const TextStyle(
-                                                    fontSize: 35,
-                                                    color: Colors.purple,
-                                                    fontWeight: FontWeight.bold,
+                                    );
+                                  },
+                                  child: Center(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(color: Colors.grey),
+                                      ),
+                                      padding: const EdgeInsets.all(16),
+                                      child: Card(
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          side: const BorderSide(
+                                              color: Colors.grey),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // Navigate to the leaderboard page or add your onTap logic here
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const LeaderBoardPage(), // Replace with the actual page
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  '⬅️ LEADERBOARD',
+                                                  style: GoogleFonts.oswald(
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 35,
+                                                      color: Colors.purple,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 10),
-                                            ],
+                                                const SizedBox(height: 10),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              ),
+                                  )),
                             ],
                           ),
                         ),
-
                       ]),
                 ),
               ),
             )));
   }
-  Widget _buildText(String text, {bool isHeader = false}) {
-    return Column(
-       children: [Text(
-          text,
-          style: GoogleFonts.oswald(
-            textStyle: TextStyle(
-              fontSize: isHeader ? 32 : 26,
-              color: Colors.white,
-              fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-    ),
-         const SizedBox(height: 5),
-    ]
-    );
 
+  Widget _buildText(String text, {bool isHeader = false}) {
+    return Column(children: [
+      Text(
+        text,
+        style: GoogleFonts.oswald(
+          textStyle: TextStyle(
+            fontSize: isHeader ? 32 : 26,
+            color: Colors.white,
+            fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ),
+      const SizedBox(height: 5),
+    ]);
   }
+
   String _formatTimestamp(Timestamp? timestamp) {
     if (timestamp == null) {
       return 'N/A'; // or any default value for null timestamp
@@ -230,5 +238,4 @@ class _UserPageState extends State<UserPage> {
 
     return formattedDate;
   }
-
 }
