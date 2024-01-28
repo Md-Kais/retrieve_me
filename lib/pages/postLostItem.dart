@@ -85,6 +85,36 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
         dateTimeController != null;
   }
 
+// Function to add a lost product ID to the user's document
+  Future<void> addLostProductToUser(String userId, String lostProductId) async {
+    try {
+      // Reference to the user document in the database
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('Users').doc(userId);
+
+      // Get the current data of the user
+      DocumentSnapshot userSnapshot = await userRef.get();
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+
+      // Retrieve the existing list of lost product IDs or create an empty list
+      List<String> lostProductIds =
+          List<String>.from(userData['lostProductIds'] ?? []);
+
+      // Add the new lost product ID to the list
+      lostProductIds.add(lostProductId);
+
+      // Update the user document with the new list of lost product IDs
+      await userRef.update({
+        'lostProductIds': lostProductIds,
+      });
+
+      print('Lost product ID added to user document successfully.');
+    } catch (e) {
+      print('Error adding lost product ID to user document: $e');
+    }
+  }
+
   Future<void> submitLostItem() async {
     if (areAllFieldsFilled()) {
       try {
@@ -108,7 +138,8 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
           'IsRetrieved': isRetrieved,
         };
         DocumentReference docId = await collectionReference.add(lostItemData);
-
+        await addLostProductToUser(userID, docId.id);
+        print(docId.id);
         // ignore: use_build_context_synchronously
         showDialog(
           context: context,
