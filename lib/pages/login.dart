@@ -42,28 +42,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+  bool areAllFieldsFilled() {
+    return emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty;
   }
 
   Future<void> handleGoogleSignIn() async {
     EasyLoading.show(status: 'Loading. Please wait...');
-    final UserCredential user = await signInWithGoogle();
+    final User user = await AuthService.signInWithGoogle();
     EasyLoading.dismiss();
+    print(user);
     if (user != null) {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const ProfilePage()),
@@ -217,16 +205,24 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(height: 50), // Removed 'const'
 
                             // google + apple sign in buttons
-                            const Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 // google button
-                                SquareTile(imagePath: 'lib/images/google.png'),
+                                GestureDetector(
+                                    onTap: () {
+                                      handleGoogleSignIn();
+                                    },
+                                    child: SquareTile(
+                                        imagePath: 'lib/images/google.png')),
 
                                 SizedBox(width: 25),
 
                                 // apple button
-                                SquareTile(imagePath: 'lib/images/github.png')
+                                GestureDetector(
+                                    onTap: () {},
+                                    child: SquareTile(
+                                        imagePath: 'lib/images/github.png'))
                               ],
                             ),
 
@@ -280,13 +276,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _authenticate() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && areAllFieldsFilled()) {
       EasyLoading.show(status: 'Please wait', dismissOnTap: false);
-      // final email = emailController.text;
-      // final password = passwordController.text;
+      final email = emailController.text;
+      final password = passwordController.text;
       try {
-        // final User user = await AuthService.loginAdmin(email, password);
-
+        final User user = await AuthService.loginAdmin(email, password);
         // ignore: use_build_context_synchronously
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -296,9 +291,12 @@ class _LoginPageState extends State<LoginPage> {
       } on FirebaseAuthException catch (error) {
         EasyLoading.dismiss();
         setState(() {
-          _errMsg = error.message!;
+          // _errMsg = error.message!;
+          EasyLoading.showError(error.message!);
         });
       }
+    } else {
+      EasyLoading.showError('Please fill in all fields correctly');
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/drawer_item.dart';
 import 'package:retrieve_me/Components/drawer_items.dart';
+import 'package:retrieve_me/auth/auth_services.dart';
 import 'package:retrieve_me/pages/foundItemList.dart';
 import 'package:retrieve_me/pages/lostItemList.dart';
 import 'package:retrieve_me/pages/postFoundItem.dart';
@@ -155,7 +156,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               ));
   }
 
-  selectItem(BuildContext context, int index, String itemTitle) {
+  selectItem(BuildContext context, int index, String itemTitle) async {
     navigateTo(page) => Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => page,
         ));
@@ -176,6 +177,8 @@ class NavigationDrawerWidget extends StatelessWidget {
         navigateTo(ProfilePage());
         break;
       case 'Logout':
+        // logout and navigate to LoginPage()
+        await AuthService.logout();
         navigateTo(LoginPage());
         break;
     }

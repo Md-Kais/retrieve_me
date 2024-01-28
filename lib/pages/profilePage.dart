@@ -40,7 +40,6 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     EasyLoading.dismiss();
     super.initState();
-
     getUserInfo();
   }
 

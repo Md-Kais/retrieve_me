@@ -6,7 +6,7 @@ final itemsFirst = [
   const DrawerItem(title: 'Post Found Item', icon: Icons.people),
   const DrawerItem(title: 'Lost Item List', icon: Icons.list),
   const DrawerItem(title: 'Found Item List', icon: Icons.list),
-  const DrawerItem(title: 'Item Case History', icon: Icons.history)
+  const DrawerItem(title: 'Item Case History', icon: Icons.history),
 ];
 
 final itemsSecond = [

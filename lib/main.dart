@@ -24,20 +24,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        builder: EasyLoading.init(),
-        debugShowCheckedModeBanner: false,
-        title: 'Retrieve-Me',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-          useMaterial3: true,
-        ),
-        // home: const RegistrationPage(),
-        // home: LoginPage(),
-        initialRoute: LoginPage.routeName,
-        routes: {
-          LoginPage.routeName: (_) => const LoginPage(),
-          UserPage.routeName: (_) => const UserPage(),
-          LeaderBoardPage.routeName: (_) => const LeaderBoardPage(),
-        });
+      builder: EasyLoading.init(),
+      debugShowCheckedModeBanner: false,
+      title: 'Retrieve-Me',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        useMaterial3: true,
+      ),
+      // home: const RegistrationPage(),
+      // home: LoginPage(),
+      initialRoute: LoginPage.routeName,
+      routes: {
+        LoginPage.routeName: (_) => const LoginPage(),
+        UserPage.routeName: (_) => const UserPage(),
+        LeaderBoardPage.routeName: (_) => const LeaderBoardPage(),
+      },
+    );
   }
 }
