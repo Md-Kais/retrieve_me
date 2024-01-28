@@ -5,12 +5,14 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/my_button.dart';
 import 'package:retrieve_me/Components/navigation_drawer_widget.dart';
+import 'package:retrieve_me/auth/auth_services.dart';
 import 'package:retrieve_me/pages/mapscreen.dart';
 import 'package:retrieve_me/provider/navigation_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 
 import '../firebase_options.dart';
+import 'ChatPage.dart';
 
 GlobalKey<ScaffoldState> _sKey = GlobalKey();
 
@@ -273,8 +275,25 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.350,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      addLostProductToUser(ds['UserID'], ds.id);
+                                    onPressed: () async {
+                                      print('User Id');
+                                      print(ds['UserID']);
+                                      await addLostProductToUser( AuthService
+                                          .currentUser!.uid, ds.id );
+                                      await createChatDocument(ds.id,
+                                          AuthService.currentUser!.uid,
+                                          ds['UserID']);
+
+                                      print(ds.id);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatPage
+                                            (userId: AuthService
+                                              .currentUser!.uid, postId: ds.id ,
+                                              receiverId:  ds['UserID'],),
+                                        ),
+                                      );
                                       // Navigator.push(
                                       //     context,
                                       //     MaterialPageRoute(
@@ -334,7 +353,8 @@ class _LostItemListPageState extends State<LostItemListPage> {
     );
   }
 
-  Future<void> addLostProductToUser(String userId, String lostProductId) async {
+  Future<void> addLostProductToUser(String userId, String lostProductId)
+  async {
     try {
       // Reference to the user document in the database
       DocumentReference userRef =
@@ -346,15 +366,15 @@ class _LostItemListPageState extends State<LostItemListPage> {
           userSnapshot.data() as Map<String, dynamic>;
 
       // Retrieve the existing list of lost product IDs or create an empty list
-      List<String> lostProductIds =
-          List<String>.from(userData['lostProductIds'] ?? []);
+      List<String> messageProductIds =
+          List<String>.from(userData['messageProductIds'] ?? []);
 
       // Add the new lost product ID to the list
-      lostProductIds.add(lostProductId);
+      messageProductIds.add(lostProductId);
 
       // Update the user document with the new list of lost product IDs
       await userRef.update({
-        'lostProductIds': lostProductIds,
+        'messageProductIds': messageProductIds,
       });
 
       print('Lost product ID added to user document successfully.');
@@ -362,4 +382,29 @@ class _LostItemListPageState extends State<LostItemListPage> {
       print('Error adding lost product ID to user document: $e');
     }
   }
+
+  Future<void> createChatDocument(String productId, String userId, String
+  postUserID)
+  async {
+    try {
+      // Create a document in the UserMessages collection
+      String customId = userId;
+      customId += '_';
+      customId += postUserID;
+      print(customId);
+      await FirebaseFirestore.instance.collection('UserMessage').doc(productId)
+          .collection(userId).add({
+        // Add any additional information you want to store for the conversation
+        'timestamp': FieldValue.serverTimestamp(),
+        'senderId': userId,
+        'recieverId' : postUserID,
+        'message' : 'this product is mine',
+      });
+
+      print('Chat document created successfully.');
+    } catch (e) {
+      print('Error creating chat document: $e');
+    }
+  }
+
 }

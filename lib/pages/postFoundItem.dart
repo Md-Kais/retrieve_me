@@ -71,7 +71,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
         selectedImage != null &&
         dateTimeController != null;
   }
-  Future<void> addFoundProductToUser(String userId, String lostProductId)
+  Future<void> addFoundProductToUser(String userId, String foundProductId)
   async {
     try {
       // Reference to the user document in the database
@@ -87,14 +87,21 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
       List<String> foundProductIds =
       List<String>.from(userData['foundProductIds'] ?? []);
 
+
+      List<String> messageProductIds =
+      List<String>.from(userData['messageProductIds'] ?? []);
       // Add the new lost product ID to the list
-      foundProductIds.add(lostProductId);
+      messageProductIds.add(foundProductId);
+
 
       // Update the user document with the new list of lost product IDs
       await userRef.update({
         'foundProductIds': foundProductIds,
       });
 
+      await userRef.update({
+        'messageProductIds': messageProductIds,
+      });
       print('Lost product ID added to user document successfully.');
     } catch (e) {
       print('Error adding lost product ID to user document: $e');
@@ -123,7 +130,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
           'IsRetrieved': isRetrieved,
         };
         DocumentReference docId= await collectionReference.add(foundItemData);
-        print(docId.id);
+      //  print(docId.id);
         await addFoundProductToUser(userID, docId.id);
 
         showDialog(

@@ -8,6 +8,7 @@ import 'package:retrieve_me/provider/navigation_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 
+import '../auth/auth_services.dart';
 import '../firebase_options.dart';
 
 GlobalKey<ScaffoldState> _sKey = GlobalKey();
@@ -269,7 +270,12 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                   child: ElevatedButton(
                                     onPressed: () async {
                                       await addFoundProductToUser(
-                                          ds['UserID'], ds.id);
+                                        AuthService
+                                            .currentUser!.uid, ds.id);
+                                      await createChatDocument(ds.id,
+                                          AuthService.currentUser!.uid,
+                                          ds['UserID']);
+
                                       // Navigator.push(
                                       //     context,
                                       //     MaterialPageRoute(
@@ -340,20 +346,43 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
           userSnapshot.data() as Map<String, dynamic>;
 
       // Retrieve the existing list of lost product IDs or create an empty list
-      List<String> foundProductIds =
-          List<String>.from(userData['foundProductIds'] ?? []);
+      List<String> messageProductIds =
+      List<String>.from(userData['messageProductIds'] ?? []);
 
       // Add the new lost product ID to the list
-      foundProductIds.add(lostProductId);
+      messageProductIds.add(lostProductId);
 
       // Update the user document with the new list of lost product IDs
       await userRef.update({
-        'foundProductIds': foundProductIds,
+        'messageProductIds': messageProductIds,
       });
 
       print('Lost product ID added to user document successfully.');
     } catch (e) {
       print('Error adding lost product ID to user document: $e');
+    }
+  }
+  Future<void> createChatDocument(String productId, String userId, String
+  postUserID)
+  async {
+    try {
+      // Create a document in the UserMessages collection
+      String customId = userId;
+      customId += '_';
+      customId += postUserID;
+      print(customId);
+      await FirebaseFirestore.instance.collection('UserMessage').doc(productId)
+          .collection(userId).add({
+        // Add any additional information you want to store for the conversation
+        'timestamp': FieldValue.serverTimestamp(),
+        'senderId': userId,
+        'recieverId' : postUserID,
+        'message' : 'this product is mine',
+      });
+
+      print('Chat document created successfully.');
+    } catch (e) {
+      print('Error creating chat document: $e');
     }
   }
 }

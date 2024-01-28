@@ -104,9 +104,20 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
       // Add the new lost product ID to the list
       lostProductIds.add(lostProductId);
 
+
+
+      List<String> messageProductIds =
+      List<String>.from(userData['messageProductIds'] ?? []);
+      // Add the new lost product ID to the list
+      messageProductIds.add(lostProductId);
+
       // Update the user document with the new list of lost product IDs
       await userRef.update({
         'lostProductIds': lostProductIds,
+      });
+
+      await userRef.update({
+        'messageProductIds' : messageProductIds,
       });
 
       print('Lost product ID added to user document successfully.');
@@ -114,6 +125,7 @@ class _PostLostItemPageState extends State<PostLostItemPage> {
       print('Error adding lost product ID to user document: $e');
     }
   }
+
 
   Future<void> submitLostItem() async {
     if (areAllFieldsFilled()) {

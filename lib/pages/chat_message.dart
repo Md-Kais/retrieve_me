@@ -154,6 +154,7 @@ class _ChatMessagesState extends State<ChatMessages> {
           children: [
             Text(item['ItemLocation'] ?? 'Unknown location'),
             Text('Date: ${_formatDateTime(item['DateTime'] as Timestamp)}'),
+            Text(item['UserID'] ?? 'NONE')
           ],
         ),
         leading: Image.network(item['ImageURL'] ?? ''),
