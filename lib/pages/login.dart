@@ -50,8 +50,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> handleGoogleSignIn() async {
     EasyLoading.show(status: 'Loading. Please wait...');
     final User user = await AuthService.signInWithGoogle();
-    EasyLoading.dismiss();
     print(user);
+    EasyLoading.dismiss();
     if (user != null) {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const ProfilePage()),
