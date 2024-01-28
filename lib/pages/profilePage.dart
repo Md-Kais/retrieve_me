@@ -32,13 +32,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late UserModel userModel;
+  UserModel? userModel;
   List<UserModel> userListX = [];
 
   @override
   @override
   void initState() {
+    EasyLoading.dismiss();
     super.initState();
+
     getUserInfo();
   }
 
@@ -118,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           radius: 70,
                                           backgroundColor: Colors.transparent,
                                           child: CachedNetworkImage(
-                                            imageUrl: userModel
+                                            imageUrl: userModel!
                                                 .thumbnailImage.downloadUrl,
                                             imageBuilder:
                                                 (context, imageProvider) =>
@@ -159,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         const SizedBox(height: 5),
                                         Text(
-                                          userModel.profession,
+                                          userModel!.profession,
                                           style: GoogleFonts.lato(
                                             textStyle: const TextStyle(
                                               fontSize: 20,
@@ -170,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         const SizedBox(height: 5),
                                         Text(
-                                          'Points: ${userModel.rating}',
+                                          'Points: ${userModel!.rating}',
                                           style: GoogleFonts.lato(
                                             textStyle: const TextStyle(
                                               fontSize: 20,
@@ -181,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         const SizedBox(height: 5),
                                         Text(
-                                          userModel.address,
+                                          userModel!.address,
                                           style: GoogleFonts.lato(
                                             textStyle: const TextStyle(
                                               fontSize: 20,

@@ -15,14 +15,18 @@ class db_helper {
     final snapshot = await _db.collection(adminCollection).doc(uid).get();
     return snapshot.exists;
   }
+
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
     print("HELLO KAIS");
     return _db.collection(collectionUser).snapshots();
   }
+
   static Future<void> addUser(UserModel userModel) {
     print(userModel.email);
-    return _db.collection(collectionUser).doc(userModel.userId).set(userModel
-        .toMap());
+    return _db
+        .collection(collectionUser)
+        .doc(userModel.userId)
+        .set(userModel.toMap());
   }
 
   static Future<bool> doesUserExist(String uid) async {

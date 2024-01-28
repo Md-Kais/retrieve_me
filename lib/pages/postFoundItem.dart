@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:retrieve_me/auth/auth_services.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 import '../Components/my_textfield.dart';
 import '../Components/navigation_drawer_widget.dart';
 import '../firebase_options.dart';
@@ -230,19 +231,42 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
                                 width: MediaQuery.of(context).size.width * 0.75,
                                 height:
                                     MediaQuery.of(context).size.height * 0.075,
-                                child: TextButton(
-                                  onPressed: _insertImage,
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.cyan,
-                                    shadowColor: Colors.green,
-                                  ),
-                                  child:
-                                      const Text('Insert Found Product Image',
-                                          style: TextStyle(
-                                            color: Colors.brown,
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                ),
+                                child: selectedImage != null
+                                    ? Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                            WidgetZoom(
+                                                heroAnimationTag: 'tag',
+                                                zoomWidget: Image.file(
+                                                    File(selectedImage!.path))),
+                                            // reset
+                                            const SizedBox(width: 16),
+                                            IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    selectedImage = null;
+                                                  });
+                                                },
+                                                icon: const Icon(
+                                                    Icons.close_outlined,
+                                                    size: 30))
+                                          ])
+                                    : TextButton(
+                                        onPressed: _insertImage,
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: Colors.cyan,
+                                          shadowColor: Colors.green,
+                                        ),
+                                        child: const Text(
+                                            'Insert Lost Product Image',
+                                            style: TextStyle(
+                                              color: Colors.brown,
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                      ),
                               ),
                               const SizedBox(height: 16),
                               SizedBox(

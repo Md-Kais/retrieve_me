@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/my_button.dart';
 import 'package:retrieve_me/Components/my_textfield.dart';
@@ -39,6 +40,35 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) => const PostLostItemPage(),
       ),
     );
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<void> handleGoogleSignIn() async {
+    EasyLoading.show(status: 'Loading. Please wait...');
+    final UserCredential user = await signInWithGoogle();
+    EasyLoading.dismiss();
+    if (user != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
+      );
+    }
   }
 
   @override
@@ -252,15 +282,15 @@ class _LoginPageState extends State<LoginPage> {
   void _authenticate() async {
     if (_formKey.currentState!.validate()) {
       EasyLoading.show(status: 'Please wait', dismissOnTap: false);
-      final email = emailController.text;
-      final password = passwordController.text;
+      // final email = emailController.text;
+      // final password = passwordController.text;
       try {
-        final User user = await AuthService.loginAdmin(email, password);
-        EasyLoading.dismiss();
+        // final User user = await AuthService.loginAdmin(email, password);
+
         // ignore: use_build_context_synchronously
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ProfilePage(),
+            builder: (context) => const ProfilePage(),
           ),
         );
       } on FirebaseAuthException catch (error) {

@@ -19,7 +19,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   UserModel? userModel;
 
   @override

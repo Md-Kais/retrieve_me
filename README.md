@@ -1,8 +1,22 @@
-#  Setup Guide for "Retrieve Me" Project
+# <h1 align = "center"> RETRIEVE ME </h1>
+
+## Table of Contents
+- [Overview](#overview)
+- [Seteup Guide](#steup-guide)
+- [Installation](#installation)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Acknowledgements](#acknowledgements)
+- [Contributors](#contributors)
+
+## Overview
+
+
+##  Setup Guide
 
 Welcome to the setup guide for the "Retrieve Me" project, a Flutter and Firebase-based application developed using Agile methodologies. In this guide, we will walk you through the process of setting up the project on your local machine for development and testing purposes.
 
-## Prerequisites
+### Prerequisites
 
 Before you begin, make sure you have the following prerequisites installed on your system:
 
@@ -12,11 +26,11 @@ Before you begin, make sure you have the following prerequisites installed on yo
 4. **Android Studio** or **VS Code**: Integrated development environment (IDE) for Flutter development.
 5. **Android/iOS Emulator** or a physical device for testing.
 
-## Step-by-Step Setup Process
+### Step-by-Step Setup Process
 
 Follow these steps to set up the "Retrieve Me" project on your local machine:
 
-### 1. Clone the Repository
+#### 1. Clone the Repository
 
 Open a terminal and execute the following command to clone the project repository:
 
@@ -37,11 +51,11 @@ cd retrieve_me
 flutter pub get
 ```
 
-### 4. Run the Application
+#### 4. Run the Application
 
 Use your preferred IDE (Android Studio or VS Code) to open the project directory.
 
-#### Running on Android Emulator/Device
+##### Running on Android Emulator/Device
 
 1. Ensure your Android emulator or physical device is connected.
 2. Run the app using the IDE's run button or execute the following command in the terminal:
@@ -50,7 +64,7 @@ Use your preferred IDE (Android Studio or VS Code) to open the project directory
 flutter run
 ```
 
-#### Running on iOS Simulator/Device
+##### Running on iOS Simulator/Device
 
 1. Ensure you have Xcode installed on macOS.
 2. Open the `ios/Runner.xcworkspace` file in Xcode.
@@ -61,22 +75,22 @@ flutter run
 flutter run
 ```
 
-### 5. Testing
+#### 5. Testing
 
 You can now interact with the "Retrieve Me" app on the emulator or device. Explore its features and functionalities to ensure everything is working as expected.
 
-## Contributing and Agile Workflow
+### Contributing and Agile Workflow
 
 If you're interested in contributing to the project, we follow an Agile development workflow using Git. Create a new branch for your feature or bug fix, make your changes, and submit a pull request to the `develop` branch.
 
 For Agile-related tasks, we use tools like Trello  to manage user stories, tasks, and sprints. Feel free to join our Agile boards and participate in the development process.
 
-## Conclusion
+### Conclusion
 
 Congratulations! You've successfully set up the "Retrieve Me" project on your local machine using Agile development practices. You can now start developing, testing, and contributing to the project. If you encounter any issues, refer to the project documentation or reach out to the development team for assistance.
 
 Happy coding! 🚀
 
-## Team Members:
+## Contributors:
 1. Imran Farid
 2. Ramisa Zahara Matin

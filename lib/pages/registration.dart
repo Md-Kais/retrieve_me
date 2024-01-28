@@ -170,9 +170,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                       obscureText: false,
                       prefixIcon: Icons.person,
                       labelText: 'First Name',
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
-                      ],
+                      // inputFormatters: [
+                      //   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
+                      // ],
                     ),
 
                     const SizedBox(height: 16),
@@ -182,9 +182,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                       obscureText: false,
                       prefixIcon: Icons.person,
                       labelText: 'Last Name',
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
-                      ],
+                      // inputFormatters: [
+                      //   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z. ]'))
+                      // ],
                     ),
                     const SizedBox(height: 16),
                     MyTextField(
@@ -195,9 +195,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                       prefixIcon: Icons.phone,
                       labelText: 'Contact Number',
                       keyboardType: TextInputType.phone,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly
-                      ], // Allow digits only
+                      // inputFormatters: [
+                      //   FilteringTextInputFormatter.digitsOnly
+                      // ], // Allow digits only
                     ),
                     const SizedBox(height: 16),
                     MyTextField(

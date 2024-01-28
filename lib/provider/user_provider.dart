@@ -13,7 +13,6 @@ import '../model/image_model.dart';
 class UserProvider extends ChangeNotifier {
   UserModel? userModel;
 
-
   // Future<void> addUser(User user,firstName,lastName,address,contactNumber)
   // async{
   //   try {
@@ -41,8 +40,8 @@ class UserProvider extends ChangeNotifier {
 
   getAllUsers() {
     db_helper.getAllUsers().listen((event) {
-      userList = List.generate(event.docs.length, (index) =>
-          UserModel.fromMap(event.docs[index].data()));
+      userList = List.generate(event.docs.length,
+          (index) => UserModel.fromMap(event.docs[index].data()));
       print(userList.length);
       notifyListeners();
     });
@@ -50,19 +49,18 @@ class UserProvider extends ChangeNotifier {
 
   getUserInfo() {
     db_helper.getUserInfo(AuthService.currentUser!.uid).listen((snapshot) {
-      if(snapshot.exists) {
+      if (snapshot.exists) {
         userModel = UserModel.fromMap(snapshot.data()!);
         notifyListeners();
       }
-
     });
   }
+
   Future<ImageModel> uploadImage(String imageLocalPath) async {
     final String imageName = 'image_${DateTime.now().millisecondsSinceEpoch}';
     const String imageDirectory = 'Users/';
-    final photoRef = FirebaseStorage.instance
-        .ref()
-        .child('$imageDirectory$imageName');
+    final photoRef =
+        FirebaseStorage.instance.ref().child('$imageDirectory$imageName');
     final uploadTask = photoRef.putFile(File(imageLocalPath));
     final snapshot = await uploadTask.whenComplete(() => null);
     final url = await snapshot.ref.getDownloadURL();
@@ -72,5 +70,6 @@ class UserProvider extends ChangeNotifier {
       directoryName: imageDirectory,
     );
   }
+
   Future<bool> doesUserExist(String uid) => db_helper.doesUserExist(uid);
 }
