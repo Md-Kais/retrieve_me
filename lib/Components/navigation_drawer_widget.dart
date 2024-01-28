@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/drawer_item.dart';
 import 'package:retrieve_me/Components/drawer_items.dart';
 import 'package:retrieve_me/auth/auth_services.dart';
+import 'package:retrieve_me/pages/chat_message.dart';
 import 'package:retrieve_me/pages/foundItemList.dart';
 import 'package:retrieve_me/pages/lostItemList.dart';
 import 'package:retrieve_me/pages/postFoundItem.dart';
@@ -179,6 +180,9 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 'Item Case History':
         navigateTo(const ItemHistory());
+        break;
+      case 'Chat':
+        navigateTo(const ChatMessages());
         break;
       case 'Logout':
         // logout and navigate to LoginPage()
