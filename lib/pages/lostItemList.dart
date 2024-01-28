@@ -43,6 +43,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
               .collection('LostProduct')
               .where('LostItem', isEqualTo: _searchText.trim())
               .snapshots();
+
           print('Query result is: $query');
         }
       });
@@ -94,26 +95,25 @@ class _LostItemListPageState extends State<LostItemListPage> {
             options: DefaultFirebaseOptions.currentPlatform,
           ),
           builder: (context, snapshot) {
-            return SafeArea(child:
-            Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 45, 44, 46),
-                      Color.fromARGB(255, 5, 63, 111),
-                      Color.fromARGB(255, 5, 63, 111)
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    viewSearchBar(),
-                    queryLostItems(),
-                  ],
-                ))
-            );
+            return SafeArea(
+                child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 45, 44, 46),
+                          Color.fromARGB(255, 5, 63, 111),
+                          Color.fromARGB(255, 5, 63, 111)
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        viewSearchBar(),
+                        queryLostItems(),
+                      ],
+                    )));
           },
         ),
       ),
@@ -274,6 +274,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                       MediaQuery.of(context).size.width * 0.350,
                                   child: ElevatedButton(
                                     onPressed: () {
+                                      addLostProductToUser(ds['UserID'], ds.id);
                                       // Navigator.push(
                                       //     context,
                                       //     MaterialPageRoute(
@@ -331,5 +332,34 @@ class _LostItemListPageState extends State<LostItemListPage> {
         ),
       ),
     );
+  }
+
+  Future<void> addLostProductToUser(String userId, String lostProductId) async {
+    try {
+      // Reference to the user document in the database
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('Users').doc(userId);
+
+      // Get the current data of the user
+      DocumentSnapshot userSnapshot = await userRef.get();
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+
+      // Retrieve the existing list of lost product IDs or create an empty list
+      List<String> lostProductIds =
+          List<String>.from(userData['lostProductIds'] ?? []);
+
+      // Add the new lost product ID to the list
+      lostProductIds.add(lostProductId);
+
+      // Update the user document with the new list of lost product IDs
+      await userRef.update({
+        'lostProductIds': lostProductIds,
+      });
+
+      print('Lost product ID added to user document successfully.');
+    } catch (e) {
+      print('Error adding lost product ID to user document: $e');
+    }
   }
 }

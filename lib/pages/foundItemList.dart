@@ -267,7 +267,9 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.350,
                                   child: ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      await addFoundProductToUser(
+                                          ds['UserID'], ds.id);
                                       // Navigator.push(
                                       //     context,
                                       //     MaterialPageRoute(
@@ -323,5 +325,35 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
         ),
       ),
     );
+  }
+
+  Future<void> addFoundProductToUser(
+      String userId, String lostProductId) async {
+    try {
+      // Reference to the user document in the database
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('Users').doc(userId);
+
+      // Get the current data of the user
+      DocumentSnapshot userSnapshot = await userRef.get();
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+
+      // Retrieve the existing list of lost product IDs or create an empty list
+      List<String> foundProductIds =
+          List<String>.from(userData['foundProductIds'] ?? []);
+
+      // Add the new lost product ID to the list
+      foundProductIds.add(lostProductId);
+
+      // Update the user document with the new list of lost product IDs
+      await userRef.update({
+        'foundProductIds': foundProductIds,
+      });
+
+      print('Lost product ID added to user document successfully.');
+    } catch (e) {
+      print('Error adding lost product ID to user document: $e');
+    }
   }
 }
