@@ -177,7 +177,7 @@ class NavigationDrawerWidget extends StatelessWidget {
         navigateTo(ProfilePage());
         break;
       case 'Item Case History':
-        navigateTo(ItemHistory());
+        navigateTo(const ItemHistory());
         break;
       case 'Logout':
         navigateTo(LoginPage());

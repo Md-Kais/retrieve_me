@@ -33,7 +33,7 @@ class _ItemHistoryState extends State<ItemHistory> {
             ),
             title: const SafeArea(
               child: Text(
-                'Leader Board',
+                'Item History',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
