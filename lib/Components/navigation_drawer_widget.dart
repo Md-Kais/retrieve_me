@@ -10,6 +10,7 @@ import 'package:retrieve_me/pages/postFoundItem.dart';
 import 'package:retrieve_me/pages/postLostItem.dart';
 import 'package:retrieve_me/pages/profilePage.dart';
 
+import '../pages/itemHistory.dart';
 import '../pages/login.dart';
 import '../provider/navigation_provider.dart';
 
@@ -175,6 +176,9 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 'User Dashboard':
         navigateTo(ProfilePage());
+        break;
+      case 'Item Case History':
+        navigateTo(const ItemHistory());
         break;
       case 'Logout':
         // logout and navigate to LoginPage()

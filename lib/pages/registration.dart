@@ -20,6 +20,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../model/UserModel.dart';
 
 class RegistrationPage extends StatefulWidget {
+  static const String routeName = '/registration';
   const RegistrationPage({Key? key}) : super(key: key);
 
   @override
@@ -349,6 +350,9 @@ class RegistrationPageState extends State<RegistrationPage> {
             final imageModel =
                 await Provider.of<UserProvider>(context, listen: false)
                     .uploadImage(imageLocalPath!);
+            List<String> lostProductIds =[];
+            List<String> foundProductIds =[];
+            List<String> messageProductIds =[];
             final userModel = UserModel(
               userId: user.uid,
               email: user.email!,
@@ -360,6 +364,9 @@ class RegistrationPageState extends State<RegistrationPage> {
               rating: 0,
               contactNo: contactNumber,
               thumbnailImage: imageModel,
+              lostProductIds: lostProductIds,
+              foundProductIds: foundProductIds,
+              messageProductIds: messageProductIds,
             );
             await db_helper.addUser(userModel);
           } catch (error) {

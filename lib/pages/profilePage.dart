@@ -24,6 +24,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 User? get currentUser => _auth.currentUser;
 
 class ProfilePage extends StatefulWidget {
+  static const String routeName = '/profile';
   const ProfilePage({Key? key}) : super(key: key);
 
   @override

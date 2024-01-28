@@ -58,6 +58,33 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     return ChangeNotifierProvider(
       create: (BuildContext context) => NavigationProvider(),
       child: Scaffold(
+        appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+          title: const SafeArea(
+            child: Text(
+              'Found Items',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 45, 44, 46),
+                    Color.fromARGB(255, 5, 63, 111),
+                  ],
+                  begin: FractionalOffset(0.0, 0.0),
+                  end: FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp),
+            ),
+          ),
+        ),
         drawer: const NavigationDrawerWidget(),
         key: _sKey,
         body: FutureBuilder(
