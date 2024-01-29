@@ -30,7 +30,9 @@ class _ChatScreenPostState extends State<ChatScreenPost> {
             stream: FirebaseFirestore.instance
                 .collection('UserMessage')
                 .doc(widget.postId)
-                .collection(widget.receiverId)
+                .collection('Users')
+                .doc(widget.receiverId)
+                .collection('Messages')
                 .orderBy('timestamp', descending: false)
                 .snapshots(),
             builder: (context, snapshot) {
@@ -98,7 +100,9 @@ class _ChatScreenPostState extends State<ChatScreenPost> {
       FirebaseFirestore.instance
           .collection('UserMessage')
           .doc(widget.postId)
-          .collection(widget.receiverId)
+          .collection('Users')
+          .doc(widget.receiverId)
+          .collection('Messages')
           .add({
         'senderId': widget.userId,
         'receiverId': widget.receiverId,

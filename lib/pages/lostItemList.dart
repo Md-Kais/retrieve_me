@@ -388,12 +388,9 @@ class _LostItemListPageState extends State<LostItemListPage> {
   async {
     try {
       // Create a document in the UserMessages collection
-      String customId = userId;
-      customId += '_';
-      customId += postUserID;
-      print(customId);
-      await FirebaseFirestore.instance.collection('UserMessage').doc(productId)
-          .collection(userId).add({
+
+      await FirebaseFirestore.instance.collection('UserChats').doc
+        (productId).collection('Users').doc(userId).collection('Messages').add({
         // Add any additional information you want to store for the conversation
         'timestamp': FieldValue.serverTimestamp(),
         'senderId': userId,

@@ -381,14 +381,16 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
       customId += '_';
       customId += postUserID;
       print(customId);
-      await FirebaseFirestore.instance.collection('UserMessage').doc(productId)
-          .collection(userId).add({
+
+      await FirebaseFirestore.instance.collection('UserChats').doc
+        (productId).collection('Users').doc(userId).collection('Messages').add({
         // Add any additional information you want to store for the conversation
         'timestamp': FieldValue.serverTimestamp(),
         'senderId': userId,
         'receiverId' : postUserID,
         'message' : 'this product is mine',
       });
+
 
       print('Chat document created successfully.');
     } catch (e) {

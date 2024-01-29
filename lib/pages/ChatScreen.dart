@@ -7,9 +7,8 @@ class ChatScreen extends StatefulWidget {
   final String userId;
   final String postId;
   final String receiverId;
-  const ChatScreen({ required this.userId, required this.postId, required this
-      .receiverId});
-
+  const ChatScreen(
+      {required this.userId, required this.postId, required this.receiverId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -19,17 +18,19 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
+          //Firebase Used
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('UserMessage')
                 .doc(widget.postId)
-                .collection(widget.userId)
+                .collection('Users')
+                .doc(widget.userId)
+                .collection('Messages')
                 .orderBy('timestamp', descending: false)
                 .snapshots(),
             builder: (context, snapshot) {
@@ -41,11 +42,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
               List<Chat> messages = snapshot.data!.docs
                   .map((doc) => Chat(
-                senderId: doc['senderId'],
-                receiverId: doc['receiverId'],
-                message: doc['message'],
-                timestamp: doc['timestamp'],
-              ))
+                        senderId: doc['senderId'],
+                        receiverId: doc['receiverId'],
+                        message: doc['message'],
+                        timestamp: doc['timestamp'],
+                      ))
                   .toList();
 
               return ListView.builder(
@@ -92,12 +93,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage() {
     String messageText = _messageController.text.trim();
-
+//.doc(widget.postId).collection('Users').doc(widget.userId).collection('Messages').
     if (messageText.isNotEmpty) {
       FirebaseFirestore.instance
           .collection('UserMessage')
           .doc(widget.postId)
-          .collection(widget.userId)
+          .collection('Users')
+          .doc(widget.userId)
+          .collection('Messages')
           .add({
         'senderId': widget.userId,
         'receiverId': widget.receiverId,
