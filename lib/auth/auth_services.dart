@@ -14,19 +14,24 @@ class AuthService {
   }
 
   static Future<User> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    final result = await _auth.signInWithCredential(credential);
-    return result.user!;
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      final result = await _auth.signInWithCredential(credential);
+      return result.user!;
+    } on Exception catch (e) {
+      // TODO
+      return e as User;
+    }
   }
 
   static Future<User> registerUser(
@@ -36,7 +41,8 @@ class AuthService {
     return credential.user!;
   }
 
-  static Future<void> logout() {
+  static Future<void> logout() async {
+    await GoogleSignIn().signOut();
     return _auth.signOut();
   }
 }

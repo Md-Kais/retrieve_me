@@ -54,13 +54,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Fetch user information from Firestore
   void getUserInfo() async {
-    db_helper.getUserInfo(AuthService.currentUser!.uid).listen((snapshot) {
-      if (snapshot.exists) {
-        setState(() {
-          userModel = UserModel?.fromMap(snapshot.data()!);
-        });
-      }
-    });
+    try {
+      db_helper.getUserInfo(AuthService.currentUser!.uid).listen((snapshot) {
+        if (snapshot.exists) {
+          setState(() {
+            userModel = UserModel?.fromMap(snapshot.data()!);
+          });
+        }
+      });
+    } on Exception catch (e) {
+      print(e);
+      // TODO
+    }
   }
 
   @override

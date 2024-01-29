@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:retrieve_me/auth/auth_services.dart';
 
 import '../model/chat_model.dart';
 
@@ -7,9 +8,8 @@ class ChatScreen extends StatefulWidget {
   final String userId;
   final String postId;
   final String receiverId;
-  const ChatScreen({ required this.userId, required this.postId, required this
-      .receiverId});
-
+  const ChatScreen(
+      {required this.userId, required this.postId, required this.receiverId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -19,7 +19,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,7 +27,12 @@ class _ChatScreenState extends State<ChatScreen> {
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('UserChats')
-                .doc(widget.postId).collection('Users').doc(widget.userId).collection('Messages').orderBy('timestamp', descending: false).snapshots(),
+                .doc(widget.postId)
+                .collection('Users')
+                .doc(widget.userId)
+                .collection('Messages')
+                .orderBy('timestamp', descending: false)
+                .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
@@ -38,22 +42,41 @@ class _ChatScreenState extends State<ChatScreen> {
 
               List<Chat> messages = snapshot.data!.docs
                   .map((doc) => Chat(
-                senderId: doc['senderId'],
-                receiverId: doc['receiverId'],
-                message: doc['message'],
-                timestamp: doc['timestamp'],
-              ))
+                        senderId: doc['senderId'],
+                        receiverId: doc['receiverId'],
+                        message: doc['message'],
+                        timestamp: doc['timestamp'],
+                      ))
                   .toList();
 
-              return ListView.builder(
-                controller: _scrollController,
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(messages[index].message),
-                    // Add other UI elements for the message
-                  );
-                },
+              return Align(
+                alignment: (AuthService.currentUser!.uid == widget.userId
+                    ? Alignment.centerLeft
+                    : Alignment.centerRight),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.60,
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                          dense: true,
+                          title: Container(
+                            padding: const EdgeInsets.only(
+                                left: 18, top: 18, bottom: 18),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.shade600,
+                              borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  topRight: Radius.circular(20)),
+                            ),
+                            child: Text(messages[index].message),
+                            // Add other UI elements for the message
+                          ));
+                    },
+                  ),
+                ),
               );
             },
           ),
@@ -71,13 +94,13 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: TextField(
               controller: _messageController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Type a message...',
               ),
             ),
           ),
           IconButton(
-            icon: Icon(Icons.send),
+            icon: Icon(Icons.send, color: Colors.brown.shade900),
             onPressed: () {
               _sendMessage();
             },
@@ -93,12 +116,15 @@ class _ChatScreenState extends State<ChatScreen> {
     if (messageText.isNotEmpty) {
       FirebaseFirestore.instance
           .collection('UserChats')
-          .doc(widget.postId).collection('Users').doc(widget.userId)
-          .collection('Messages').add({
-            'senderId': widget.userId,
-            'receiverId': widget.receiverId,
-            'message': messageText,
-            'timestamp': Timestamp.now(),
+          .doc(widget.postId)
+          .collection('Users')
+          .doc(widget.userId)
+          .collection('Messages')
+          .add({
+        'senderId': widget.userId,
+        'receiverId': widget.receiverId,
+        'message': messageText,
+        'timestamp': Timestamp.now(),
       });
 
       // Clear the input field

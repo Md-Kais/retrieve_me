@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -55,8 +56,8 @@ class _UserListPageState extends State<UserListPage> {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-
-                final userDoc = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                final userDoc =
+                    snapshot.data!.docs[index].data() as Map<String, dynamic>;
                 final UserModel user = UserModel.fromMap(userDoc);
                 return _buildUserCard(user, context);
               },
@@ -71,14 +72,16 @@ class _UserListPageState extends State<UserListPage> {
     print('66');
     Future<void> getUserCollectionInfo() async {
       try {
-        QuerySnapshot<Map<String, dynamic>> userCollectionSnapshot = await FirebaseFirestore.instance
-            .collection('UserChats')
-            .doc(widget.postId)
-            .collection('Users')
-            .get();
+        QuerySnapshot<Map<String, dynamic>> userCollectionSnapshot =
+            await FirebaseFirestore.instance
+                .collection('UserChats')
+                .doc(widget.postId)
+                .collection('Users')
+                .get();
 
         // Access individual documents in the collection
-        userCollectionSnapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> document) {
+        userCollectionSnapshot.docs
+            .forEach((DocumentSnapshot<Map<String, dynamic>> document) {
           print('Document ID: ${document.id}');
           // print('Document Data: ${document.data()}');
         });
@@ -86,6 +89,7 @@ class _UserListPageState extends State<UserListPage> {
         print('Error getting user collection info: $e');
       }
     }
+
     getUserCollectionInfo();
     print('67');
 
@@ -94,6 +98,61 @@ class _UserListPageState extends State<UserListPage> {
         .doc(widget.postId)
         .collection('Users')
         .snapshots();
+  }
+
+  Future<List<String>> getUsersByProductId(String productId) async {
+    List<String> userIds = [];
+
+    // Reference to the FoundProduct collection
+    CollectionReference foundProductCollection =
+        FirebaseFirestore.instance.collection('FoundProduct');
+
+    // Query for documents where product_id is equal to the provided productId
+    QuerySnapshot foundProductQuery = await foundProductCollection
+        .where('product_id', isEqualTo: productId)
+        .get();
+
+    // Extract user_ids from the foundProductQuery
+    userIds
+        .addAll(foundProductQuery.docs.map((doc) => doc['user_id'] as String));
+
+    // Reference to the LostProduct collection
+    CollectionReference lostProductCollection =
+        FirebaseFirestore.instance.collection('LostProduct');
+
+    // Query for documents where product_id is equal to the provided productId
+    QuerySnapshot lostProductQuery = await lostProductCollection
+        .where('product_id', isEqualTo: productId)
+        .get();
+
+    // Extract user_ids from the lostProductQuery
+    userIds
+        .addAll(lostProductQuery.docs.map((doc) => doc['user_id'] as String));
+
+    return userIds;
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUsersStream(String productId) {
+    StreamController<QuerySnapshot<Map<String, dynamic>>> controller =
+        StreamController();
+
+    getUsersByProductId(productId).then((userIds) {
+      for (String userId in userIds) {
+        // Reference to your Users collection
+        CollectionReference usersCollection =
+            FirebaseFirestore.instance.collection('Users');
+
+        // Query for documents where user_id is equal to the current userId
+        Stream<DocumentSnapshot<Object?>> userStream =
+            usersCollection.doc(userId).snapshots();
+
+        // Add the userStream to the controller
+        controller.addStream(
+            userStream as Stream<QuerySnapshot<Map<String, dynamic>>>);
+      }
+    });
+
+    return controller.stream;
   }
 
   Widget _buildUserCard(UserModel user, BuildContext context) {
