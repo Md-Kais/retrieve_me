@@ -28,7 +28,7 @@ class _ChatScreenPostState extends State<ChatScreenPost> {
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection('UserMessage')
+                .collection('UserChats')
                 .doc(widget.postId)
                 .collection('Users')
                 .doc(widget.receiverId)
@@ -98,7 +98,7 @@ class _ChatScreenPostState extends State<ChatScreenPost> {
 
     if (messageText.isNotEmpty) {
       FirebaseFirestore.instance
-          .collection('UserMessage')
+          .collection('UserChats')
           .doc(widget.postId)
           .collection('Users')
           .doc(widget.receiverId)

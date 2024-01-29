@@ -155,7 +155,7 @@ class _ChatMessagesState extends State<ChatMessages> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => UserListPage(productId: item['productId']),
+              builder: (context) => UserListPage(postId: item['productId']),
             ),
           );
         } else {

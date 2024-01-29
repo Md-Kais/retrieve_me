@@ -81,4 +81,27 @@ class UserModel {
     foundProductIds: List<String>.from(map[userFieldFoundProductIds]),
     messageProductIds: List<String>.from(map[userFieldMessageProductIds]),
   );
+  // ... your UserModel class
+
+// Add this method to the UserModel class:
+//   factory UserModel.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
+//     final data = doc.data();
+//     return UserModel(
+//       userId: doc.id, // Use the document ID as the userId
+//       firstName: data[userFieldFirstName],
+//       lastName: data[userFieldlastName],
+//       address: data[userFieldAddress],
+//       userCreationTime: data[userFieldCreationTime],
+//       rating: data[userFieldRating],
+//       profession: data[userFieldProfession],
+//       contactNo: data[userFieldContact],
+//       email: data[userFieldEmail],
+//       thumbnailImage: ImageModel.fromJson(data[userFieldThumbnail]),
+//       lostProductIds: List<String>.from(data[userFieldLostProductIds]),
+//       foundProductIds: List<String>.from(data[userFieldFoundProductIds]),
+//       messageProductIds: List<String>.from(data[userFieldMessageProductIds]),
+//     );
+//   }
+
+
 }

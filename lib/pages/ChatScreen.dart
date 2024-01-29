@@ -7,8 +7,9 @@ class ChatScreen extends StatefulWidget {
   final String userId;
   final String postId;
   final String receiverId;
-  const ChatScreen(
-      {required this.userId, required this.postId, required this.receiverId});
+  const ChatScreen({ required this.userId, required this.postId, required this
+      .receiverId});
+
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -18,21 +19,16 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
-          //Firebase Used
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection('UserMessage')
-                .doc(widget.postId)
-                .collection('Users')
-                .doc(widget.userId)
-                .collection('Messages')
-                .orderBy('timestamp', descending: false)
-                .snapshots(),
+                .collection('UserChats')
+                .doc(widget.postId).collection('Users').doc(widget.userId).collection('Messages').orderBy('timestamp', descending: false).snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(
@@ -42,11 +38,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
               List<Chat> messages = snapshot.data!.docs
                   .map((doc) => Chat(
-                        senderId: doc['senderId'],
-                        receiverId: doc['receiverId'],
-                        message: doc['message'],
-                        timestamp: doc['timestamp'],
-                      ))
+                senderId: doc['senderId'],
+                receiverId: doc['receiverId'],
+                message: doc['message'],
+                timestamp: doc['timestamp'],
+              ))
                   .toList();
 
               return ListView.builder(
@@ -96,16 +92,13 @@ class _ChatScreenState extends State<ChatScreen> {
 //.doc(widget.postId).collection('Users').doc(widget.userId).collection('Messages').
     if (messageText.isNotEmpty) {
       FirebaseFirestore.instance
-          .collection('UserMessage')
-          .doc(widget.postId)
-          .collection('Users')
-          .doc(widget.userId)
-          .collection('Messages')
-          .add({
-        'senderId': widget.userId,
-        'receiverId': widget.receiverId,
-        'message': messageText,
-        'timestamp': Timestamp.now(),
+          .collection('UserChats')
+          .doc(widget.postId).collection('Users').doc(widget.userId)
+          .collection('Messages').add({
+            'senderId': widget.userId,
+            'receiverId': widget.receiverId,
+            'message': messageText,
+            'timestamp': Timestamp.now(),
       });
 
       // Clear the input field
