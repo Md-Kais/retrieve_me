@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import '../Components/navigation_drawer_widget.dart';
 import '../auth/auth_services.dart';
 import '../provider/navigation_provider.dart';
+import 'ChatPage.dart';
+import 'UserListPage.dart';
 
 class ChatMessages extends StatefulWidget {
   static const String routeName = '/chatMessages';
@@ -110,29 +112,29 @@ class _ChatMessagesState extends State<ChatMessages> {
       List<String>.from(userDoc['messageProductIds'] ?? []);
 
       List<Map<String, dynamic>> messagesHistory = [];
-      for (var foundProductId in messageProductIds) {
-        var foundProductDoc = await FirebaseFirestore.instance
+      for (var productId in messageProductIds) {
+        var productDoc = await FirebaseFirestore.instance
             .collection('FoundProduct')
-            .doc(foundProductId)
+            .doc(productId)
             .get();
 
-        if (foundProductDoc.exists) {
-          messagesHistory.add(foundProductDoc.data() as Map<String, dynamic>);
+        if (!productDoc.exists) {
+          // If the product is not found in FoundProduct, check LostProduct
+          productDoc = await FirebaseFirestore.instance
+              .collection('LostProduct')
+              .doc(productId)
+              .get();
+        }
+
+        if (productDoc.exists) {
+          // Add the product data along with productId to the messagesHistory list
+          var productData = productDoc.data() as Map<String, dynamic>;
+          productData['productId'] = productId;
+          messagesHistory.add(productData);
         }
       }
 
-      for (var lostProductId in messageProductIds) {
-        var lostProductDoc = await FirebaseFirestore.instance
-            .collection('LostProduct')
-            .doc(lostProductId)
-            .get();
-
-        if (lostProductDoc.exists) {
-          messagesHistory.add(lostProductDoc.data() as Map<String, dynamic>);
-        }
-      }
-
-      // Sort itemHistory by date in descending order
+      // Sort messagesHistory by date in descending order
       messagesHistory.sort((a, b) =>
           (b['DateTime'] as Timestamp).compareTo(a['DateTime'] as Timestamp));
 
@@ -145,23 +147,50 @@ class _ChatMessagesState extends State<ChatMessages> {
 
   Widget _buildItemCard(Map<String, dynamic> item) {
     // Customize this widget based on your UI design
-    return Card(
-      margin: const EdgeInsets.all(8),
-      child: ListTile(
-        title: Text(item['FoundItem'] ?? item['Category'] ?? 'Unknown'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(item['ItemLocation'] ?? 'Unknown location'),
-            Text('Date: ${_formatDateTime(item['DateTime'] as Timestamp)}'),
-            Text(item['UserID'] ?? 'NONE')
-          ],
+    return GestureDetector(
+      onTap: () {
+        // Check if the current user is the owner of the product
+        if (item['UserID'] == userID) {
+          // Navigate to the list of users
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserListPage(productId: item['productId']),
+            ),
+          );
+        } else {
+          // Navigate to the ChatPage with appropriate arguments
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPage(
+                userId: userID,
+                postId: item['productId'],
+                receiverId: item['UserID'],
+              ),
+            ),
+          );
+        }
+      },
+      child: Card(
+        margin: const EdgeInsets.all(8),
+        child: ListTile(
+          title: Text(item['FoundItem'] ?? item['Category'] ?? 'Unknown'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(item['ItemLocation'] ?? 'Unknown location'),
+              Text('Date: ${_formatDateTime(item['DateTime'] as Timestamp)}'),
+              Text(item['UserID'] ?? 'NONE'),
+            ],
+          ),
+          leading: Image.network(item['ImageURL'] ?? ''),
+          // Add more details as needed
         ),
-        leading: Image.network(item['ImageURL'] ?? ''),
-        // Add more details as needed
       ),
     );
   }
+
 
   String _formatDateTime(Timestamp timestamp) {
     // Format timestamp to a readable date format

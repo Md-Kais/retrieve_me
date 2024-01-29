@@ -291,7 +291,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                           builder: (context) => ChatPage
                                             (userId: AuthService
                                               .currentUser!.uid, postId: ds.id ,
-                                              receiverId:  ds['UserID'],),
+                                              receiverId:  ds['UserID']),
                                         ),
                                       );
                                       // Navigator.push(
@@ -397,7 +397,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
         // Add any additional information you want to store for the conversation
         'timestamp': FieldValue.serverTimestamp(),
         'senderId': userId,
-        'recieverId' : postUserID,
+        'receiverId' : postUserID,
         'message' : 'this product is mine',
       });
 
