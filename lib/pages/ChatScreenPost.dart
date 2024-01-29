@@ -3,19 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../model/chat_model.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreenPost extends StatefulWidget {
   final String userId;
   final String postId;
   final String receiverId;
-  const ChatScreen({ required this.userId, required this.postId, required this
+  const ChatScreenPost({ required this.userId, required this.postId, required
+  this
       .receiverId});
 
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _ChatScreenPostState createState() => _ChatScreenPostState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenPostState extends State<ChatScreenPost> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -29,7 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
             stream: FirebaseFirestore.instance
                 .collection('UserMessage')
                 .doc(widget.postId)
-                .collection(widget.userId)
+                .collection(widget.receiverId)
                 .orderBy('timestamp', descending: false)
                 .snapshots(),
             builder: (context, snapshot) {
@@ -97,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
       FirebaseFirestore.instance
           .collection('UserMessage')
           .doc(widget.postId)
-          .collection(widget.userId)
+          .collection(widget.receiverId)
           .add({
         'senderId': widget.userId,
         'receiverId': widget.receiverId,

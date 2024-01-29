@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'ChatScreen.dart';
+import 'ChatScreenPost.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPagePost extends StatelessWidget {
   final String userId;
   final String postId;
   final String receiverId;
-  ChatPage({required this.userId, required this.postId, required this
+  ChatPagePost({required this.userId, required this.postId, required this
       .receiverId});
 
   @override
@@ -16,8 +16,8 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Chat Page'),
       ),
-      body: ChatScreen(userId: userId, postId: postId, receiverId: receiverId,),
+      body: ChatScreenPost(userId: userId, postId: postId, receiverId:
+      receiverId),
     );
   }
 }
-//recieverId

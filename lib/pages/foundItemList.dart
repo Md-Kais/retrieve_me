@@ -10,6 +10,7 @@ import 'package:widget_zoom/widget_zoom.dart';
 
 import '../auth/auth_services.dart';
 import '../firebase_options.dart';
+import 'ChatPage.dart';
 
 GlobalKey<ScaffoldState> _sKey = GlobalKey();
 
@@ -276,6 +277,15 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                           AuthService.currentUser!.uid,
                                           ds['UserID']);
 
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatPage
+                                            (userId: AuthService
+                                              .currentUser!.uid, postId: ds.id ,
+                                            receiverId:  ds['UserID']),
+                                        ),
+                                      );
                                       // Navigator.push(
                                       //     context,
                                       //     MaterialPageRoute(
@@ -376,7 +386,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
         // Add any additional information you want to store for the conversation
         'timestamp': FieldValue.serverTimestamp(),
         'senderId': userId,
-        'recieverId' : postUserID,
+        'receiverId' : postUserID,
         'message' : 'this product is mine',
       });
 

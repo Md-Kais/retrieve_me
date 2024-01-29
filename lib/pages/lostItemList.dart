@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/my_button.dart';
 import 'package:retrieve_me/Components/navigation_drawer_widget.dart';
 import 'package:retrieve_me/auth/auth_services.dart';
+import 'package:retrieve_me/pages/ChatPage.dart';
 import 'package:retrieve_me/pages/mapscreen.dart';
 import 'package:retrieve_me/provider/navigation_provider.dart';
 import 'package:intl/intl.dart';
@@ -275,11 +276,26 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                       MediaQuery.of(context).size.width * 0.350,
                                   child: ElevatedButton(
                                     onPressed: () async {
+                                      print('User Id');
+                                      print(ds['UserID']);
                                       await addLostProductToUser(
                                           AuthService.currentUser!.uid, ds.id);
+                                      await createChatDocument(
+                                          ds.id,
+                                          AuthService.currentUser!.uid,
+                                          ds['UserID']);
 
-                                      await createSubcollection(
-                                          AuthService.currentUser!.uid, ds.id);
+                                      print(ds.id);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatPage(
+                                              userId:
+                                                  AuthService.currentUser!.uid,
+                                              postId: ds.id,
+                                              receiverId: ds['UserID']),
+                                        ),
+                                      );
                                       // Navigator.push(
                                       //     context,
                                       //     MaterialPageRoute(
@@ -402,8 +418,8 @@ class _LostItemListPageState extends State<LostItemListPage> {
         // Add any additional information you want to store for the conversation
         'timestamp': FieldValue.serverTimestamp(),
         'senderId': userId,
-        'recieverId': postUserID,
-        'message': 'this product is mine!',
+        'receiverId': postUserID,
+        'message': 'this product is mine',
       });
 
       print('Chat document created successfully.');

@@ -32,7 +32,7 @@ class NavigationDrawerWidget extends StatelessWidget {
         child: Container(
             color: const Color(0xFF1a2f45),
             child: ListView(
-              physics: ClampingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               children: [
                 Container(
                   padding:
