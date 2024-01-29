@@ -213,16 +213,8 @@ class _LoginPageState extends State<LoginPage> {
                                     onTap: () {
                                       handleGoogleSignIn();
                                     },
-                                    child: SquareTile(
+                                    child: const SquareTile(
                                         imagePath: 'lib/images/google.png')),
-
-                                SizedBox(width: 25),
-
-                                // apple button
-                                GestureDetector(
-                                    onTap: () {},
-                                    child: SquareTile(
-                                        imagePath: 'lib/images/github.png'))
                               ],
                             ),
 

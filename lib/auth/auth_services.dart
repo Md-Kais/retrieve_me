@@ -37,6 +37,18 @@ class AuthService {
     }
   }
 
+  Future<UserCredential> signInWithGitHub() async {
+    // Create a new provider
+    try {
+      GithubAuthProvider githubProvider = GithubAuthProvider();
+
+      return await FirebaseAuth.instance.signInWithProvider(githubProvider);
+    } on Exception catch (e) {
+      // TODO
+      return e as UserCredential;
+    }
+  }
+
   static Future<User> registerUser(
       String email, String password, String contactNumber) async {
     final credential = await _auth.createUserWithEmailAndPassword(
