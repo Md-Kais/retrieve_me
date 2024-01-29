@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     EasyLoading.dismiss();
     print(user);
     if (user != null) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
     }

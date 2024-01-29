@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:widget_zoom/widget_zoom.dart';
 
 import '../firebase_options.dart';
-import 'ChatPage.dart';
 
 GlobalKey<ScaffoldState> _sKey = GlobalKey();
 
@@ -276,24 +275,11 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                       MediaQuery.of(context).size.width * 0.350,
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      print('User Id');
-                                      print(ds['UserID']);
-                                      await addLostProductToUser( AuthService
-                                          .currentUser!.uid, ds.id );
-                                      await createChatDocument(ds.id,
-                                          AuthService.currentUser!.uid,
-                                          ds['UserID']);
+                                      await addLostProductToUser(
+                                          AuthService.currentUser!.uid, ds.id);
 
-                                      print(ds.id);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ChatPage
-                                            (userId: AuthService
-                                              .currentUser!.uid, postId: ds.id ,
-                                              receiverId:  ds['UserID'],),
-                                        ),
-                                      );
+                                      await createSubcollection(
+                                          AuthService.currentUser!.uid, ds.id);
                                       // Navigator.push(
                                       //     context,
                                       //     MaterialPageRoute(
@@ -353,12 +339,29 @@ class _LostItemListPageState extends State<LostItemListPage> {
     );
   }
 
-  Future<void> addLostProductToUser(String userId, String lostProductId)
-  async {
+  Future<void> createSubcollection(String userID, String productID) async {
+    // Reference to the main "items" collection
+    CollectionReference itemsCollection =
+        FirebaseFirestore.instance.collection('UserMessage');
+
+    // Reference to the specific item document
+    DocumentReference itemDocument = itemsCollection.doc(productID);
+
+    // Reference to the "messages" subcollection inside the item document
+    CollectionReference messagesCollection =
+        itemDocument.collection('messages');
+
+    // Add a new document with the message
+    await messagesCollection.add({
+      // You can include a timestamp if needed
+    });
+  }
+
+  Future<void> addLostProductToUser(String userId, String lostProductId) async {
     try {
       // Reference to the user document in the database
       DocumentReference userRef =
-          FirebaseFirestore.instance.collection('Users').doc(userId);
+          FirebaseFirestore.instance.collection('User').doc(userId);
 
       // Get the current data of the user
       DocumentSnapshot userSnapshot = await userRef.get();
@@ -366,15 +369,15 @@ class _LostItemListPageState extends State<LostItemListPage> {
           userSnapshot.data() as Map<String, dynamic>;
 
       // Retrieve the existing list of lost product IDs or create an empty list
-      List<String> messageProductIds =
-          List<String>.from(userData['messageProductIds'] ?? []);
+      List<String> lostProductIds =
+          List<String>.from(userData['lostProductIds'] ?? []);
 
       // Add the new lost product ID to the list
-      messageProductIds.add(lostProductId);
+      lostProductIds.add(lostProductId);
 
       // Update the user document with the new list of lost product IDs
       await userRef.update({
-        'messageProductIds': messageProductIds,
+        'lostProductIds': lostProductIds,
       });
 
       print('Lost product ID added to user document successfully.');
@@ -383,22 +386,24 @@ class _LostItemListPageState extends State<LostItemListPage> {
     }
   }
 
-  Future<void> createChatDocument(String productId, String userId, String
-  postUserID)
-  async {
+  Future<void> createChatDocument(
+      String productId, String userId, String postUserID) async {
     try {
       // Create a document in the UserMessages collection
       String customId = userId;
       customId += '_';
       customId += postUserID;
       print(customId);
-      await FirebaseFirestore.instance.collection('UserMessage').doc(productId)
-          .collection(userId).add({
+      await FirebaseFirestore.instance
+          .collection('UserMessage')
+          .doc(productId)
+          .collection(userId)
+          .add({
         // Add any additional information you want to store for the conversation
         'timestamp': FieldValue.serverTimestamp(),
         'senderId': userId,
-        'recieverId' : postUserID,
-        'message' : 'this product is mine',
+        'recieverId': postUserID,
+        'message': 'this product is mine!',
       });
 
       print('Chat document created successfully.');
@@ -406,5 +411,4 @@ class _LostItemListPageState extends State<LostItemListPage> {
       print('Error creating chat document: $e');
     }
   }
-
 }
