@@ -1,1 +1,46 @@
-//sorry sir, can't provide this.
+{
+  "project_info": {
+    "project_number": "106875158936",
+    "project_id": "retrieve-me",
+    "storage_bucket": "retrieve-me.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106875158936:android:cd04a18b8ec3d976b62bed",
+        "android_client_info": {
+          "package_name": "com.kais29.retrieve_me"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106875158936-97c5fo3suetjk4ogbpjpb0f9sd3gvsmv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZz1FiUV-GaE9L22uyiieYW36h5iP00tQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106875158936-97c5fo3suetjk4ogbpjpb0f9sd3gvsmv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "106875158936-crekq3denfoplf602lg59j9fo17okm2r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kais29.retrieveMe"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
