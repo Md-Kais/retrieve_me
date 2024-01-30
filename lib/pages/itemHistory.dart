@@ -154,6 +154,7 @@ class _ItemHistoryState extends State<ItemHistory> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(item['LostItem'] ?? item['Category'] ?? 'Unknown'),
             Text(item['ItemLocation'] ?? 'Unknown location'),
             Text('Date: ${_formatDateTime(item['DateTime'] as Timestamp)}'),
           ],
