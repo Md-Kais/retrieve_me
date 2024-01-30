@@ -1,108 +1,152 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:retrieve_me/pages/ChatPageForPost.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import '../auth/auth_services.dart';
-// Import your ChatPage
+import 'ChatPageForPost.dart';
 
-class UserListPage extends StatefulWidget {
+class UserListPage extends StatelessWidget {
   final String productId;
+  final String currentUserId;
 
-  const UserListPage({Key? key, required this.productId}) : super(key: key);
+  UserListPage({required this.productId, required this.currentUserId});
 
-  @override
-  _UserListPageState createState() => _UserListPageState();
-}
-
-class _UserListPageState extends State<UserListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Users'),
-      ),
-      body: FutureBuilder(
-        future: _fetchUsers(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Text('No users found.'),
-            );
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data?.length,
-              itemBuilder: (context, index) {
-                var user = snapshot.data?[index];
-                return _buildUserCard(user!, context);
-              },
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> _fetchUsers() async {
-    try {
-      // Fetch the list of user IDs associated with the product
-      final productDoc = await FirebaseFirestore.instance
-          .collection('UserMessage')
-          .doc(widget.productId)
-          .get();
-
-      List<String> userIds =
-      List<String>.from(productDoc['messageProductIds'] ?? []);
-
-      List<Map<String, dynamic>> usersList = [];
-      for (var userId in userIds) {
-        var userDoc = await FirebaseFirestore.instance
-            .collection('Users')
-            .doc(userId)
-            .get();
-
-        if (userDoc.exists) {
-          usersList.add(userDoc.data() as Map<String, dynamic>);
-        }
-      }
-
-      return usersList;
-    } catch (e) {
-      print('Error fetching users: $e');
-      return [];
-    }
-  }
-
-  Widget _buildUserCard(Map<String, dynamic> user, BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(8),
-      child: ListTile(
-        title: Text('${user['firstName']} ${user['lastName']}'),
-        subtitle: Text(user['userId'] ?? 'Unknown'),
-        onTap: () {
-          _navigateToChatPage(user['userId']);
-        },
-      ),
-    );
-  }
-
-  void _navigateToChatPage(String receiverId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatPagePost(
-          userId: AuthService.currentUser!.uid,
-          postId: widget.productId,
-          receiverId: receiverId,
+        appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+          title: const SafeArea(
+            child: Text(
+              'Claimers',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 45, 44, 46),
+                  Color.fromARGB(255, 5, 63, 111),
+                ],
+                begin: FractionalOffset(0.0, 0.0),
+                end: FractionalOffset(1.0, 0.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp,
+              ),
+            ),
+          ),
         ),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(255, 45, 44, 46),
+                Color.fromARGB(255, 5, 63, 111),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('ProductClaim')
+                .doc(productId)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+
+              if (!snapshot.hasData || snapshot.data == null) {
+                return Center(
+                    child: Text(
+                  'No message found',
+                  style: GoogleFonts.oswald(
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20, // Set the text size to 20
+                    ),
+                  ),
+                ));
+              }
+
+              var productClaimData =
+                  snapshot.data!.data() as Map<String, dynamic>?;
+
+              if (productClaimData == null ||
+                  !productClaimData.containsKey('assertUsers')) {
+                return Center(
+                  child: Text(
+                    'No message found',
+                    style: GoogleFonts.oswald(
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20, // Set the text size to 20
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              List<String> assertUsers =
+                  List<String>.from(productClaimData['assertUsers'] ?? []);
+
+              return ListView.builder(
+                itemCount: assertUsers.length,
+                itemBuilder: (context, index) {
+                  return buildUserListTile(
+                      context, assertUsers[index], productId, currentUserId);
+                },
+              );
+            },
+          ),
+        ));
+  }
+
+  Widget buildUserListTile(BuildContext context, String userId,
+      String productId, String currentUserId) {
+    return ListTile(
+      title: FutureBuilder(
+        future:
+            FirebaseFirestore.instance.collection('Users').doc(userId).get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Text('Loading...');
+          }
+
+          var userData = snapshot.data;
+          String firstName = userData?['firstName'];
+          String lastName = userData?['lastName'];
+          String userName = '$firstName $lastName';
+
+          return Text(
+            userName,
+            style: GoogleFonts.oswald(
+              textStyle: const TextStyle(
+                color: Colors.white,
+                fontSize: 20, // Set the text size to 20
+              ),
+            ),
+          );
+        },
       ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatPagePost(
+              receiverId: userId,
+              postId: productId,
+              userId: currentUserId,
+            ),
+          ),
+        );
+      },
     );
   }
 }

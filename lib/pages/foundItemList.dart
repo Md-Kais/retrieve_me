@@ -272,10 +272,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                     onPressed: () async {
                                       await addFoundProductToUser(
                                         AuthService
-                                            .currentUser!.uid, ds.id);
-                                      await createChatDocument(ds.id,
-                                          AuthService.currentUser!.uid,
-                                          ds['UserID']);
+                                            .currentUser!.uid, ds.id, ds['UserID']);
 
                                       Navigator.push(
                                         context,
@@ -344,23 +341,23 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
   }
 
   Future<void> addFoundProductToUser(
-      String userId, String lostProductId) async {
+      String userId, String productId, String postUserID) async {
     try {
       // Reference to the user document in the database
       DocumentReference userRef =
-          FirebaseFirestore.instance.collection('Users').doc(userId);
+      FirebaseFirestore.instance.collection('Users').doc(userId);
 
       // Get the current data of the user
       DocumentSnapshot userSnapshot = await userRef.get();
       Map<String, dynamic> userData =
-          userSnapshot.data() as Map<String, dynamic>;
+      userSnapshot.data() as Map<String, dynamic>;
 
       // Retrieve the existing list of lost product IDs or create an empty list
       List<String> messageProductIds =
       List<String>.from(userData['messageProductIds'] ?? []);
 
       // Add the new lost product ID to the list
-      messageProductIds.add(lostProductId);
+      messageProductIds.add(productId);
 
       // Update the user document with the new list of lost product IDs
       await userRef.update({
@@ -371,28 +368,58 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     } catch (e) {
       print('Error adding lost product ID to user document: $e');
     }
-  }
-  Future<void> createChatDocument(String productId, String userId, String
-  postUserID)
-  async {
+
     try {
       // Create a document in the UserMessages collection
-      String customId = userId;
-      customId += '_';
-      customId += postUserID;
-      print(customId);
       await FirebaseFirestore.instance.collection('UserMessage').doc(productId)
           .collection(userId).add({
         // Add any additional information you want to store for the conversation
         'timestamp': FieldValue.serverTimestamp(),
         'senderId': userId,
-        'receiverId' : postUserID,
-        'message' : 'this product is mine',
+        'receiverId': postUserID,
+        'message': 'this product is mine',
       });
+
 
       print('Chat document created successfully.');
     } catch (e) {
       print('Error creating chat document: $e');
     }
+
+    try {
+      // Reference to the product claim document in the database
+      DocumentReference productClaimRef =
+      FirebaseFirestore.instance.collection('ProductClaim').doc(productId);
+
+      // Get the current data of the product claim document
+      DocumentSnapshot productClaimSnapshot = await productClaimRef.get();
+      Map<String, dynamic>? productClaimData =
+      productClaimSnapshot.data() as Map<String, dynamic>?;
+
+      if (postUserID != userId) {
+        if (productClaimData == null) {
+          // If the document doesn't exist, create it with the productId as the document ID
+          await productClaimRef.set({
+            'productId': productId,
+            'assertUsers': [userId],
+          });
+        } else {
+          // If the document already exists, update the assertUsers field
+          List<String> assertUsers =
+          List<String>.from(productClaimData['assertUsers'] ?? []);
+          assertUsers.add(userId);
+
+          // Update the product claim document with the new list of assertUsers
+          await productClaimRef.update({
+            'assertUsers': assertUsers,
+          });
+        }
+      }
+
+      print('User asserted claim for product successfully.');
+    } catch (e) {
+      print('Error asserting claim for product: $e');
+    }
   }
+
 }
