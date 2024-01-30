@@ -279,11 +279,8 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                       print('User Id');
                                       print(ds['UserID']);
                                       await addLostProductToUser(
-                                          AuthService.currentUser!.uid, ds.id);
-                                      await createChatDocument(
-                                          ds.id,
-                                          AuthService.currentUser!.uid,
-                                          ds['UserID']);
+                                          AuthService.currentUser!.uid, ds
+                                          .id, ds['UserID']);
 
                                       print(ds.id);
                                       Navigator.push(
@@ -355,25 +352,26 @@ class _LostItemListPageState extends State<LostItemListPage> {
     );
   }
 
-  Future<void> createSubcollection(String userID, String productID) async {
-    // Reference to the main "items" collection
-    CollectionReference itemsCollection =
-        FirebaseFirestore.instance.collection('UserMessage');
+  // Future<void> createSubcollection(String userID, String productID) async {
+  //   // Reference to the main "items" collection
+  //   CollectionReference itemsCollection =
+  //       FirebaseFirestore.instance.collection('UserMessage');
+  //
+  //   // Reference to the specific item document
+  //   DocumentReference itemDocument = itemsCollection.doc(productID);
+  //
+  //   // Reference to the "messages" subcollection inside the item document
+  //   CollectionReference messagesCollection =
+  //       itemDocument.collection('messages');
+  //
+  //   // Add a new document with the message
+  //   await messagesCollection.add({
+  //     // You can include a timestamp if needed
+  //   });
+  // }
 
-    // Reference to the specific item document
-    DocumentReference itemDocument = itemsCollection.doc(productID);
-
-    // Reference to the "messages" subcollection inside the item document
-    CollectionReference messagesCollection =
-        itemDocument.collection('messages');
-
-    // Add a new document with the message
-    await messagesCollection.add({
-      // You can include a timestamp if needed
-    });
-  }
-
-  Future<void> addLostProductToUser(String userId, String lostProductId) async {
+  Future<void> addLostProductToUser(String userId, String productId, String postUserID)
+  async {
     try {
       // Reference to the user document in the database
       DocumentReference userRef =
@@ -389,7 +387,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
           List<String>.from(userData['lostProductIds'] ?? []);
 
       // Add the new lost product ID to the list
-      lostProductIds.add(lostProductId);
+      lostProductIds.add(productId);
 
       // Update the user document with the new list of lost product IDs
       await userRef.update({
@@ -400,16 +398,8 @@ class _LostItemListPageState extends State<LostItemListPage> {
     } catch (e) {
       print('Error adding lost product ID to user document: $e');
     }
-  }
-
-  Future<void> createChatDocument(
-      String productId, String userId, String postUserID) async {
-    try {
+    try{
       // Create a document in the UserMessages collection
-      String customId = userId;
-      customId += '_';
-      customId += postUserID;
-      print(customId);
       await FirebaseFirestore.instance
           .collection('UserMessage')
           .doc(productId)
@@ -425,6 +415,41 @@ class _LostItemListPageState extends State<LostItemListPage> {
       print('Chat document created successfully.');
     } catch (e) {
       print('Error creating chat document: $e');
+    }
+
+    try {
+      // Reference to the product claim document in the database
+      DocumentReference productClaimRef =
+      FirebaseFirestore.instance.collection('ProductClaim').doc(productId);
+
+      // Get the current data of the product claim document
+      DocumentSnapshot productClaimSnapshot = await productClaimRef.get();
+      Map<String, dynamic>? productClaimData =
+      productClaimSnapshot.data() as Map<String, dynamic>?;
+
+      if(postUserID != userId) {
+        if (productClaimData == null) {
+          // If the document doesn't exist, create it with the productId as the document ID
+          await productClaimRef.set({
+            'productId': productId,
+            'assertUsers': [userId],
+          });
+        } else {
+          // If the document already exists, update the assertUsers field
+          List<String> assertUsers =
+          List<String>.from(productClaimData['assertUsers'] ?? []);
+          assertUsers.add(userId);
+
+          // Update the product claim document with the new list of assertUsers
+          await productClaimRef.update({
+            'assertUsers': assertUsers,
+          });
+        }
+      }
+
+      print('User asserted claim for product successfully.');
+    } catch (e) {
+      print('Error asserting claim for product: $e');
     }
   }
 }

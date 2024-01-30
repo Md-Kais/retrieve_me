@@ -8,8 +8,8 @@ class ChatScreen extends StatefulWidget {
   final String userId;
   final String postId;
   final String receiverId;
-  const ChatScreen(
-      {required this.userId, required this.postId, required this.receiverId});
+
+  ChatScreen({required this.userId, required this.postId, required this.receiverId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -40,48 +40,46 @@ class _ChatScreenState extends State<ChatScreen> {
 
               List<Chat> messages = snapshot.data!.docs
                   .map((doc) => Chat(
-                        senderId: doc['senderId'],
-                        receiverId: doc['receiverId'],
-                        message: doc['message'],
-                        timestamp: doc['timestamp'],
-                      ))
+                senderId: doc['senderId'],
+                receiverId: doc['receiverId'],
+                message: doc['message'],
+                timestamp: doc['timestamp'],
+              ))
                   .toList();
 
-              return Align(
-                alignment: (AuthService.currentUser!.uid == widget.userId
-                    ? Alignment.centerLeft
-                    : Alignment.centerRight),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.60,
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        dense: true,
-                        title: Container(
-                          padding: const EdgeInsets.only(
-                              left: 18, top: 18, bottom: 18),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade600,
-                            borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20),
-                                topRight: Radius.circular(20)),
-                          ),
-                          child: Text(
-                            messages[index].message,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              // fontWeight: FontWeight.bold,
-                            ),
+              return SizedBox(
+                width: MediaQuery.of(context).size.width * 0.98,
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    bool isCurrentUser = AuthService.currentUser!.uid == messages[index].senderId;
+
+                    return Align(
+                      alignment: isCurrentUser ? Alignment.topRight : Alignment
+                          .topLeft,
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade600,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                            topRight: isCurrentUser ? Radius.circular(20) : Radius.zero,
+                            topLeft: isCurrentUser ? Radius.zero : Radius.circular(20),
                           ),
                         ),
-                        // Add other UI elements for the message
-                      );
-                    },
-                  ),
+                        child: Text(
+                          messages[index].message,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               );
             },
@@ -100,8 +98,17 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: TextField(
               controller: _messageController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Type a message...',
+                hintStyle: TextStyle(color: Colors.white), // Set hint text color
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white), // Set border color
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white), // Set border color when focused
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
             ),
           ),

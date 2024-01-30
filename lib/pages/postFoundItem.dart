@@ -86,7 +86,7 @@ class _PostFoundItemPageState extends State<PostFoundItemPage> {
       // Retrieve the existing list of lost product IDs or create an empty list
       List<String> foundProductIds =
       List<String>.from(userData['foundProductIds'] ?? []);
-
+      foundProductIds.add(foundProductId);
 
       List<String> messageProductIds =
       List<String>.from(userData['messageProductIds'] ?? []);

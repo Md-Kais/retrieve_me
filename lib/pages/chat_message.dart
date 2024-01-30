@@ -155,7 +155,9 @@ class _ChatMessagesState extends State<ChatMessages> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => UserListPage(productId: item['productId']),
+              builder: (context) => UserListPage(productId:
+              item['productId'], currentUserId : AuthService
+                  .currentUser!.uid),
             ),
           );
         } else {
@@ -179,9 +181,10 @@ class _ChatMessagesState extends State<ChatMessages> {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(item['LostItem'] ?? item['Category'] ?? 'Unknown'),
               Text(item['ItemLocation'] ?? 'Unknown location'),
               Text('Date: ${_formatDateTime(item['DateTime'] as Timestamp)}'),
-              Text(item['UserID'] ?? 'NONE'),
+
             ],
           ),
           leading: Image.network(item['ImageURL'] ?? ''),
