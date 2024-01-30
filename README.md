@@ -102,4 +102,6 @@ Happy coding! 🚀
 ### Some important things to mention:
 1. May be this code won't run on your PC because we removed some security files from here which are important and crucial for running this project.
 2. If you find any bugs in this code, don't forget to create an issue.
-
+3. If you have any issues run `Flutter doctor`
+4. Also, In order to run it smoothly you might add multidex enable or change the `minSdkVersion 
+   21` under defaultConfig in  `android/app/build.gradle` file.
