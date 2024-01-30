@@ -1,8 +1,9 @@
-# <h1 align = "center"> RETRIEVE ME </h1>
+
+# <h1 align="center"> RETRIEVE ME </h1>
 
 ## Table of Contents
 - [Overview](#overview)
-- [Seteup Guide](#steup-guide)
+- [Setup Guide](#setup-guide)
 - [Installation](#installation)
 - [Features](#features)
 - [Getting Started](#getting-started)
@@ -12,7 +13,7 @@
 ## Overview
 
 
-##  Setup Guide
+## Setup Guide
 
 Welcome to the setup guide for the "Retrieve Me" project, a Flutter and Firebase-based application developed using Agile methodologies. In this guide, we will walk you through the process of setting up the project on your local machine for development and testing purposes.
 
@@ -81,9 +82,11 @@ You can now interact with the "Retrieve Me" app on the emulator or device. Explo
 
 ### Contributing and Agile Workflow
 
-If you're interested in contributing to the project, we follow an Agile development workflow using Git. Create a new branch for your feature or bug fix, make your changes, and submit a pull request to the `develop` branch.
+If you're interested in contributing to the project, we follow an Agile development workflow 
+using Git. Create a new branch for your feature or bug fix, make your changes, and submit a pull 
+request to the `development` branch.
 
-For Agile-related tasks, we use tools like Trello  to manage user stories, tasks, and sprints. Feel free to join our Agile boards and participate in the development process.
+For Agile-related tasks, we use tools like Trello to manage user stories, tasks, and sprints. Feel free to join our Agile boards and participate in the development process.
 
 ### Conclusion
 
@@ -93,4 +96,10 @@ Happy coding! 🚀
 
 ## Contributors:
 1. Imran Farid
-2. Ramisa Zahara Matin
+2. Md. Kais (ME)
+3. Ramisa Zahara Matin
+
+### Some important things to mention:
+1. May be this code won't run on your PC because we removed some security files from here which are important and crucial for running this project.
+2. If you find any bugs in this code, don't forget to create an issue.
+

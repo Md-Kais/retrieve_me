@@ -13,29 +13,6 @@ import '../model/image_model.dart';
 class UserProvider extends ChangeNotifier {
   UserModel? userModel;
 
-  // Future<void> addUser(User user,firstName,lastName,address,contactNumber)
-  // async{
-  //   try {
-  //     final userModel = UserModel(
-  //       userId: user.uid,
-  //       email: user.email!,
-  //       firstName : firstName,
-  //       lastName: lastName,
-  //       userCreationTime: Timestamp.fromDate(DateTime.now()),
-  //       address: address,
-  //       profession: 'Student',
-  //       contactNo: contactNumber,
-  //
-  //     );
-  //     await db_helper.addUser(userModel);
-  //
-  //   }
-  //   catch(error){
-  //     print('Error adding user to Firestore: $error');
-  //     // Handle error accordingly
-  //   }
-  //
-  // }
   List<UserModel> userList = [];
 
   getAllUsers() {

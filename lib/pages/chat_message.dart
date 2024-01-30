@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../Components/navigation_drawer_widget.dart';
 import '../auth/auth_services.dart';
 import '../provider/navigation_provider.dart';
@@ -20,7 +19,7 @@ class ChatMessages extends StatefulWidget {
 
 class _ChatMessagesState extends State<ChatMessages> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  // Example user ID, replace it with the actual user ID
+
   String userID = AuthService.currentUser!.uid;
 
   @override

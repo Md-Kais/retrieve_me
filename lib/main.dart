@@ -33,8 +33,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
           useMaterial3: true,
         ),
-        // home: const RegistrationPage(),
-        // home: LoginPage(),
         initialRoute: LoginPage.routeName,
         routes: {
           LoginPage.routeName: (_) => const LoginPage(),
