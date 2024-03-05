@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,7 @@ import 'package:retrieve_me/pages/mapscreen.dart';
 import 'package:retrieve_me/provider/navigation_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:widget_zoom/widget_zoom.dart';
-
+import 'package:http/http.dart' as http;
 import '../auth/auth_services.dart';
 import '../firebase_options.dart';
 import 'ChatPage.dart';
@@ -22,6 +24,7 @@ class FoundItemListPage extends StatefulWidget {
 }
 
 class _FoundItemListPageState extends State<FoundItemListPage> {
+  late List<DocumentSnapshot> lostItems;
   int index = 0;
   Stream<QuerySnapshot> query =
       FirebaseFirestore.instance.collection('FoundProduct').snapshots();
@@ -32,6 +35,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
   @override
   void initState() {
     super.initState();
+    fetchLostItems();
     _searchController.addListener(() {
       setState(() {
         _searchText = _searchController.text;
@@ -118,6 +122,63 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     );
   }
 
+  Future<void> fetchLostItems() async {
+    QuerySnapshot lostItemsSnapshot =
+        await FirebaseFirestore.instance.collection('LostProduct').get();
+
+    setState(() {
+      lostItems = lostItemsSnapshot.docs;
+    });
+  }
+
+  Future<void> findMatchingLostItem(String foundItemImageUrl) async {
+    List<Map<String, String>> lostItemsData = [];
+
+    for (var lostItem in lostItems) {
+      String lostItemImageUrl = lostItem['ImageURL'];
+
+      lostItemsData.add({
+        'found_item_image_url': foundItemImageUrl,
+        'lost_item_image_url': lostItemImageUrl,
+        'lost_item_name': lostItem['LostItem'],
+      });
+    }
+
+    print('Found Item Image URL: $foundItemImageUrl');
+    print('Lost Items Data: $lostItemsData');
+    print('Lost Items Data JSON: ${jsonEncode(lostItemsData)}');
+
+    final response = await http.post(
+      Uri.parse('http://192.168.0.183:5000/calculate_similarity'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'lost_items_data': lostItemsData,
+        'found_item_image_url': foundItemImageUrl
+      }),
+    );
+
+    print('Response: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final List<Map<String, dynamic>> results =
+          List<Map<String, dynamic>>.from(jsonDecode(response.body));
+
+      print('Results: $results');
+
+      // Process the results
+      for (int i = 0; i < results.length; i++) {
+        double similarityScore = results[i]['similarity_score'];
+        String lostItemName = results[i]['itemName'];
+
+        // Do something with the similarity score and lost item information
+        print('Lost Item: $lostItemName, Similarity Score: $similarityScore');
+      }
+    } else {
+      // Handle errors
+      print('Error: ${response.reasonPhrase}');
+    }
+  }
+
   Widget queryFoundItems() {
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
@@ -133,9 +194,10 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
               itemBuilder: (context, index) {
                 DocumentSnapshot ds = snapshot.data!.docs[index];
                 return Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Container(
                       margin: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: const Color.fromARGB(255, 137, 181, 201),
@@ -269,18 +331,51 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.350,
                                   child: ElevatedButton(
+                                    onPressed: () {
+                                      findMatchingLostItem(
+                                          (ds.data() as Map<String, dynamic>?)!
+                                                  .containsKey('ImageURL')
+                                              ? ds['ImageURL']
+                                              : placeholder);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 149, 202, 223),
+                                      // splashFactory: InkRipple.splashFactory,
+                                    ),
+                                    child: const Text(
+                                      'Check Matching Item',
+                                      style: TextStyle(
+                                        color: Colors.deepPurple,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: Checkbox.width * 0.70,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.05,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.350,
+                                  child: ElevatedButton(
                                     onPressed: () async {
                                       await addFoundProductToUser(
-                                        AuthService
-                                            .currentUser!.uid, ds.id, ds['UserID']);
+                                          AuthService.currentUser!.uid,
+                                          ds.id,
+                                          ds['UserID']);
 
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => ChatPage
-                                            (userId: AuthService
-                                              .currentUser!.uid, postId: ds.id ,
-                                            receiverId:  ds['UserID']),
+                                          builder: (context) => ChatPage(
+                                              userId:
+                                                  AuthService.currentUser!.uid,
+                                              postId: ds.id,
+                                              receiverId: ds['UserID']),
                                         ),
                                       );
                                       // Navigator.push(
@@ -345,16 +440,16 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     try {
       // Reference to the user document in the database
       DocumentReference userRef =
-      FirebaseFirestore.instance.collection('Users').doc(userId);
+          FirebaseFirestore.instance.collection('Users').doc(userId);
 
       // Get the current data of the user
       DocumentSnapshot userSnapshot = await userRef.get();
       Map<String, dynamic> userData =
-      userSnapshot.data() as Map<String, dynamic>;
+          userSnapshot.data() as Map<String, dynamic>;
 
       // Retrieve the existing list of lost product IDs or create an empty list
       List<String> messageProductIds =
-      List<String>.from(userData['messageProductIds'] ?? []);
+          List<String>.from(userData['messageProductIds'] ?? []);
 
       // Add the new lost product ID to the list
       messageProductIds.add(productId);
@@ -371,15 +466,17 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
 
     try {
       // Create a document in the UserMessages collection
-      await FirebaseFirestore.instance.collection('UserMessage').doc(productId)
-          .collection(userId).add({
+      await FirebaseFirestore.instance
+          .collection('UserMessage')
+          .doc(productId)
+          .collection(userId)
+          .add({
         // Add any additional information you want to store for the conversation
         'timestamp': FieldValue.serverTimestamp(),
         'senderId': userId,
         'receiverId': postUserID,
         'message': 'this product is mine',
       });
-
 
       print('Chat document created successfully.');
     } catch (e) {
@@ -389,12 +486,12 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     try {
       // Reference to the product claim document in the database
       DocumentReference productClaimRef =
-      FirebaseFirestore.instance.collection('ProductClaim').doc(productId);
+          FirebaseFirestore.instance.collection('ProductClaim').doc(productId);
 
       // Get the current data of the product claim document
       DocumentSnapshot productClaimSnapshot = await productClaimRef.get();
       Map<String, dynamic>? productClaimData =
-      productClaimSnapshot.data() as Map<String, dynamic>?;
+          productClaimSnapshot.data() as Map<String, dynamic>?;
 
       if (postUserID != userId) {
         if (productClaimData == null) {
@@ -406,7 +503,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
         } else {
           // If the document already exists, update the assertUsers field
           List<String> assertUsers =
-          List<String>.from(productClaimData['assertUsers'] ?? []);
+              List<String>.from(productClaimData['assertUsers'] ?? []);
           assertUsers.add(userId);
 
           // Update the product claim document with the new list of assertUsers
@@ -421,5 +518,4 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
       print('Error asserting claim for product: $e');
     }
   }
-
 }
