@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -139,9 +141,10 @@ class _LostItemListPageState extends State<LostItemListPage> {
               itemBuilder: (context, index) {
                 DocumentSnapshot ds = snapshot.data!.docs[index];
                 return Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Container(
                       margin: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(15.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Color.fromARGB(255, 137, 181, 201),
@@ -266,9 +269,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.05,
@@ -279,8 +280,9 @@ class _LostItemListPageState extends State<LostItemListPage> {
                                       print('User Id');
                                       print(ds['UserID']);
                                       await addLostProductToUser(
-                                          AuthService.currentUser!.uid, ds
-                                          .id, ds['UserID']);
+                                          AuthService.currentUser!.uid,
+                                          ds.id,
+                                          ds['UserID']);
 
                                       print(ds.id);
                                       Navigator.push(
@@ -370,8 +372,8 @@ class _LostItemListPageState extends State<LostItemListPage> {
   //   });
   // }
 
-  Future<void> addLostProductToUser(String userId, String productId, String postUserID)
-  async {
+  Future<void> addLostProductToUser(
+      String userId, String productId, String postUserID) async {
     try {
       // Reference to the user document in the database
       DocumentReference userRef =
@@ -398,7 +400,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
     } catch (e) {
       print('Error adding lost product ID to user document: $e');
     }
-    try{
+    try {
       // Create a document in the UserMessages collection
       await FirebaseFirestore.instance
           .collection('UserMessage')
@@ -420,14 +422,14 @@ class _LostItemListPageState extends State<LostItemListPage> {
     try {
       // Reference to the product claim document in the database
       DocumentReference productClaimRef =
-      FirebaseFirestore.instance.collection('ProductClaim').doc(productId);
+          FirebaseFirestore.instance.collection('ProductClaim').doc(productId);
 
       // Get the current data of the product claim document
       DocumentSnapshot productClaimSnapshot = await productClaimRef.get();
       Map<String, dynamic>? productClaimData =
-      productClaimSnapshot.data() as Map<String, dynamic>?;
+          productClaimSnapshot.data() as Map<String, dynamic>?;
 
-      if(postUserID != userId) {
+      if (postUserID != userId) {
         if (productClaimData == null) {
           // If the document doesn't exist, create it with the productId as the document ID
           await productClaimRef.set({
@@ -437,7 +439,7 @@ class _LostItemListPageState extends State<LostItemListPage> {
         } else {
           // If the document already exists, update the assertUsers field
           List<String> assertUsers =
-          List<String>.from(productClaimData['assertUsers'] ?? []);
+              List<String>.from(productClaimData['assertUsers'] ?? []);
           assertUsers.add(userId);
 
           // Update the product claim document with the new list of assertUsers
