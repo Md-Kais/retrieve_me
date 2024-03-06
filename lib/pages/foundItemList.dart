@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:retrieve_me/Components/navigation_drawer_widget.dart';
+import 'package:retrieve_me/pages/imageMatching.dart';
 import 'package:retrieve_me/pages/mapscreen.dart';
 import 'package:retrieve_me/provider/navigation_provider.dart';
 import 'package:intl/intl.dart';
@@ -24,11 +26,14 @@ class FoundItemListPage extends StatefulWidget {
 }
 
 class _FoundItemListPageState extends State<FoundItemListPage> {
+  double maxMatchProbability = 0.0;
+  String maxMatchItem = '';
+  String maxMatchItemImageUrl = '';
   late List<DocumentSnapshot> lostItems;
   int index = 0;
   Stream<QuerySnapshot> query =
       FirebaseFirestore.instance.collection('FoundProduct').snapshots();
-  TextEditingController _searchController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   String _searchText = "";
   String placeholder = 'https://placehold.co/600x400/000000/FFFFFF/png';
 
@@ -36,9 +41,9 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
   void initState() {
     super.initState();
     fetchLostItems();
-    _searchController.addListener(() {
+    searchController.addListener(() {
       setState(() {
-        _searchText = _searchController.text;
+        _searchText = searchController.text;
         if (_searchText == "") {
           query =
               FirebaseFirestore.instance.collection('FoundProduct').snapshots();
@@ -55,7 +60,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
 
   @override
   void dispose() {
-    _searchController.dispose();
+    searchController.dispose();
     super.dispose();
   }
 
@@ -147,9 +152,10 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     print('Found Item Image URL: $foundItemImageUrl');
     print('Lost Items Data: $lostItemsData');
     print('Lost Items Data JSON: ${jsonEncode(lostItemsData)}');
-
+    // make sure to run the backend server first before running the app
     final response = await http.post(
-      Uri.parse('http://192.168.0.183:5000/calculate_similarity'),
+      Uri.parse(
+          'http://192.168.0.183:5000/calculate_similarity'), // remember to change the IP address to your local machine's IP address if you are running the server locally
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'lost_items_data': lostItemsData,
@@ -158,6 +164,9 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     );
 
     print('Response: ${response.body}');
+    maxMatchProbability = 0.0;
+    maxMatchItem = '';
+    maxMatchItemImageUrl = '';
 
     if (response.statusCode == 200) {
       final List<Map<String, dynamic>> results =
@@ -169,13 +178,32 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
       for (int i = 0; i < results.length; i++) {
         double similarityScore = results[i]['similarity_score'];
         String lostItemName = results[i]['itemName'];
+        if (similarityScore >= maxMatchProbability) {
+          maxMatchProbability = similarityScore.toDouble();
+          maxMatchItem = lostItemName;
+          maxMatchItemImageUrl = lostItems[i]['ImageURL'];
+        }
 
         // Do something with the similarity score and lost item information
         print('Lost Item: $lostItemName, Similarity Score: $similarityScore');
       }
+      print(
+          'Max Match Probability: $maxMatchProbability, Max Match Item: $maxMatchItem, Max Match Item Image URL: $maxMatchItemImageUrl');
+      EasyLoading.dismiss();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ImageMatching(
+              lostItemImageURL: maxMatchItemImageUrl,
+              lostItemName: maxMatchItem,
+              lostItemMatchProbability:
+                  double.parse(maxMatchProbability.toStringAsFixed(3)),
+            ),
+          ));
     } else {
       // Handle errors
       print('Error: ${response.reasonPhrase}');
+      print("Make sure to run the backend server first before running the app");
     }
   }
 
@@ -308,8 +336,8 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                           ));
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 149, 202, 223),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 149, 202, 223),
                                       // splashFactory: InkRipple.splashFactory,
                                     ),
                                     child: const Text(
@@ -332,6 +360,9 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                       MediaQuery.of(context).size.width * 0.350,
                                   child: ElevatedButton(
                                     onPressed: () {
+                                      EasyLoading.show(
+                                          status:
+                                              'Executing ML Model for image matching...');
                                       findMatchingLostItem(
                                           (ds.data() as Map<String, dynamic>?)!
                                                   .containsKey('ImageURL')
@@ -339,8 +370,8 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                               : placeholder);
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 149, 202, 223),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 149, 202, 223),
                                       // splashFactory: InkRipple.splashFactory,
                                     ),
                                     child: const Text(
@@ -384,8 +415,8 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                       //       builder: (context) => ChatPage());
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 149, 202, 223),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 149, 202, 223),
                                       // splashFactory: InkRipple.splashFactory,
                                     ),
                                     child: const Text(
@@ -426,7 +457,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
       ),
       child: TextField(
         style: TextStyle(color: Colors.amber[50]),
-        controller: _searchController,
+        controller: searchController,
         decoration: const InputDecoration(
           labelText: 'Search Found Item',
           prefixIcon: Icon(Icons.search),
