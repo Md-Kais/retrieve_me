@@ -78,50 +78,63 @@ class ImageMatching extends StatelessWidget {
                       child: Center(
                         child: Column(
                           children: [
-                            RichText(
-                                text: const TextSpan(
-                              text: 'Item Matched!',
-                              style: TextStyle(
-                                color: Colors.blueGrey,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Caveat',
-                                fontSize: 30.0,
-                              ),
-                            )),
-                            const SizedBox(height: 10.0),
-                            Container(
-                              margin: const EdgeInsets.all(10.0),
-                              child: Image.network(
-                                lostItemImageURL,
-                                fit: BoxFit.cover,
-                                height: 200.0,
-                                width: 200.0,
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            Container(
-                              margin: const EdgeInsets.all(10.0),
-                              child: Text(
-                                '$lostItemName',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0,
+                            lostItemMatchProbability >= 0.5
+                                ? RichText(
+                                    text: const TextSpan(
+                                    text: 'Item Matched!',
+                                    style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Caveat',
+                                      fontSize: 30.0,
+                                    ),
+                                  ))
+                                : RichText(
+                                    text: const TextSpan(
+                                    text: 'None of the Items Matched!',
+                                    style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Caveat',
+                                      fontSize: 30.0,
+                                    ),
+                                  )),
+                            if (lostItemMatchProbability >= 50.0) ...[
+                              const SizedBox(height: 10.0),
+                              Container(
+                                margin: const EdgeInsets.all(10.0),
+                                child: Image.network(
+                                  lostItemImageURL,
+                                  fit: BoxFit.cover,
+                                  height: 200.0,
+                                  width: 200.0,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            Container(
-                              margin: const EdgeInsets.all(10.0),
-                              child: Text(
-                                'Match Probability: $lostItemMatchProbability',
-                                style: const TextStyle(
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0,
+                              const SizedBox(height: 5.0),
+                              Container(
+                                margin: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  '$lostItemName',
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
+                                  ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(height: 5.0),
+                              Container(
+                                margin: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  'Match Probability: $lostItemMatchProbability',
+                                  style: const TextStyle(
+                                    color: Colors.blueGrey,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
+                                  ),
+                                ),
+                              ),
+                            ]
                           ],
                         ),
                       ))

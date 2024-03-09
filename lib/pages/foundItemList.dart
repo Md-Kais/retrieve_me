@@ -26,6 +26,7 @@ class FoundItemListPage extends StatefulWidget {
 }
 
 class _FoundItemListPageState extends State<FoundItemListPage> {
+  bool isLoading = false;
   double maxMatchProbability = 0.0;
   String maxMatchItem = '';
   String maxMatchItemImageUrl = '';
@@ -137,6 +138,10 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
   }
 
   Future<void> findMatchingLostItem(String foundItemImageUrl) async {
+    setState(() {
+      isLoading = true;
+    });
+
     List<Map<String, String>> lostItemsData = [];
 
     for (var lostItem in lostItems) {
@@ -168,6 +173,8 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     maxMatchItem = '';
     maxMatchItemImageUrl = '';
 
+    EasyLoading.dismiss();
+
     if (response.statusCode == 200) {
       final List<Map<String, dynamic>> results =
           List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -189,7 +196,11 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
       }
       print(
           'Max Match Probability: $maxMatchProbability, Max Match Item: $maxMatchItem, Max Match Item Image URL: $maxMatchItemImageUrl');
-      EasyLoading.dismiss();
+      maxMatchProbability = maxMatchProbability * 100;
+      // EasyLoading.dismiss();
+      setState(() {
+        isLoading = false;
+      });
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -201,6 +212,9 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
             ),
           ));
     } else {
+      setState(() {
+        isLoading = false;
+      });
       // Handle errors
       print('Error: ${response.reasonPhrase}');
       print("Make sure to run the backend server first before running the app");

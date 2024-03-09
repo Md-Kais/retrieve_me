@@ -27,7 +27,7 @@ def calculate_similarity():
 
         similarity_score = float(similarity_score)
 
-        similarity_scores.append({'similarity_score': similarity_score * 100, 'itemName': item_data['lost_item_name'], 'itemImageURL': item_data['lost_item_image_url'] })
+        similarity_scores.append({'similarity_score': pow(similarity_score, len(item_data)), 'itemName': item_data['lost_item_name'], 'itemImageURL': item_data['lost_item_image_url'] })
 
     return jsonify(similarity_scores)
 
