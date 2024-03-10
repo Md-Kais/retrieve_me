@@ -11,10 +11,12 @@ class ImageMatching extends StatelessWidget {
   final String lostItemImageURL;
   final String lostItemName;
   final double lostItemMatchProbability;
+  final bool itemLocationMatched;
   const ImageMatching(
       {required this.lostItemImageURL,
       required this.lostItemName,
-      required this.lostItemMatchProbability});
+      required this.lostItemMatchProbability,
+      required this.itemLocationMatched});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +80,8 @@ class ImageMatching extends StatelessWidget {
                       child: Center(
                         child: Column(
                           children: [
-                            lostItemMatchProbability >= 0.5
+                            lostItemMatchProbability >= 0.5 &&
+                                    itemLocationMatched
                                 ? RichText(
                                     text: const TextSpan(
                                     text: 'Item Matched!',
@@ -91,7 +94,7 @@ class ImageMatching extends StatelessWidget {
                                   ))
                                 : RichText(
                                     text: const TextSpan(
-                                    text: 'None of the Items Matched!',
+                                    text: 'No Items Matched!',
                                     style: TextStyle(
                                       color: Colors.blueGrey,
                                       fontWeight: FontWeight.bold,
@@ -99,7 +102,8 @@ class ImageMatching extends StatelessWidget {
                                       fontSize: 30.0,
                                     ),
                                   )),
-                            if (lostItemMatchProbability >= 50.0) ...[
+                            if (lostItemMatchProbability >= 50.0 &&
+                                itemLocationMatched) ...[
                               const SizedBox(height: 10.0),
                               Container(
                                 margin: const EdgeInsets.all(10.0),

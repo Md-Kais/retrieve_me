@@ -137,7 +137,10 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     });
   }
 
-  Future<void> findMatchingLostItem(String foundItemImageUrl) async {
+  Future<void> findMatchingLostItem(
+      String foundItemImageUrl, String foundItemLocation) async {
+    // String foundItemImageUrl = foundItem['ImageURL'];
+    // String foundItemLocation = foundItem['ItemLocation'];
     setState(() {
       isLoading = true;
     });
@@ -146,11 +149,13 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
 
     for (var lostItem in lostItems) {
       String lostItemImageUrl = lostItem['ImageURL'];
+      String lostItemLocation = lostItem['ItemLocation'];
 
       lostItemsData.add({
         'found_item_image_url': foundItemImageUrl,
         'lost_item_image_url': lostItemImageUrl,
         'lost_item_name': lostItem['LostItem'],
+        'lost_item_location': lostItemLocation,
       });
     }
 
@@ -172,6 +177,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
     maxMatchProbability = 0.0;
     maxMatchItem = '';
     maxMatchItemImageUrl = '';
+    bool itemLocationMatched = false;
 
     EasyLoading.dismiss();
 
@@ -189,6 +195,11 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
           maxMatchProbability = similarityScore.toDouble();
           maxMatchItem = lostItemName;
           maxMatchItemImageUrl = lostItems[i]['ImageURL'];
+          if (foundItemLocation == results[i]['itemLocation']) {
+            itemLocationMatched = true;
+          } else {
+            itemLocationMatched = false;
+          }
         }
 
         // Do something with the similarity score and lost item information
@@ -209,6 +220,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
               lostItemName: maxMatchItem,
               lostItemMatchProbability:
                   double.parse(maxMatchProbability.toStringAsFixed(3)),
+              itemLocationMatched: itemLocationMatched,
             ),
           ));
     } else {
@@ -378,10 +390,7 @@ class _FoundItemListPageState extends State<FoundItemListPage> {
                                           status:
                                               'Executing ML Model for image matching...');
                                       findMatchingLostItem(
-                                          (ds.data() as Map<String, dynamic>?)!
-                                                  .containsKey('ImageURL')
-                                              ? ds['ImageURL']
-                                              : placeholder);
+                                          (ds['ImageURL']), ds['ItemLocation']);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color.fromARGB(
